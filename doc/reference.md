@@ -4,6 +4,7 @@
 * [`NAMEOF_FULL` obtains full name of variable, function, macro.](#nameof_full)
 * [`NAMEOF_RAW` obtains raw name of variable, function, macro.](#nameof_raw)
 * [`NAMEOF_ENUM` obtains name of enum variable.](#nameof_enum)
+* [`NAMEOF_ENUM_OR` Obtains name of enum variable or default value if enum variable out of range.](#nameof_enum_or)
 * [`NAMEOF_ENUM_CONST` obtains name of static storage enum variable.](#nameof_enum_const)
 * [`NAMEOF_ENUM_FLAG` obtains name of enum-flags variable.](#nameof_enum_flag)
 * [`NAMEOF_TYPE` obtains type name.](#nameof_type)
@@ -15,10 +16,15 @@
 * [`NAMEOF_TYPE_RTTI` obtains type name, using RTTI.](#nameof_type_rtti)
 * [`NAMEOF_FULL_TYPE_RTTI` obtains short type name, using RTTI.](#nameof_full_type_rtti)
 * [`NAMEOF_SHORT_TYPE_RTTI` obtains short type name, using RTTI.](#nameof_short_type_rtti)
+* [`NAMEOF_MEMBER` obtains name of member.](#nameof_member)
+* [`NAMEOF_POINTER` obtains name of a function, a global or class static variable.](#nameof_pointer)
 
 ## Synopsis
 
 * Before use, read the [limitations](limitations.md) of functionality.
+
+* To check is nameof_enum supported compiler use macro `NAMEOF_ENUM_SUPPORTED` or constexpr constant `nameof::is_nameof_enum_supported`.</br>
+  If nameof_enum used on unsupported compiler, occurs the compilation error. To suppress error define macro `NAMEOF_ENUM_NO_CHECK_SUPPORT`.
 
 * To check is nameof_type supported compiler use macro `NAMEOF_TYPE_SUPPORTED` or constexpr constant `nameof::is_nameof_type_supported`.</br>
   If nameof_type used on unsupported compiler, occurs the compilation error. To suppress error define macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
@@ -26,8 +32,11 @@
 * To check is nameof_type_rtti supported compiler use macro `NAMEOF_TYPE_RTTI_SUPPORTED` or constexpr constant `nameof::is_nameof_type_rtti_supported`.</br>
   If nameof_type used on unsupported compiler, occurs the compilation error. To suppress error define macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
 
-* To check is nameof_enum supported compiler use macro `NAMEOF_ENUM_SUPPORTED` or constexpr constant `nameof::is_nameof_enum_supported`.</br>
-  If nameof_enum used on unsupported compiler, occurs the compilation error. To suppress error define macro `NAMEOF_ENUM_NO_CHECK_SUPPORT`.
+* To check is nameof_member supported compiler use macro `NAMEOF_MEMBER_SUPPORTED` or constexpr constant `nameof::is_nameof_member_supported`.</br>
+  If nameof_member used on unsupported compiler, occurs the compilation error. To suppress error define macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
+
+* To check is nameof_pointer supported compiler use macro `NAMEOF_POINTER_SUPPORTED` or constexpr constant `nameof::is_nameof_pointer_supported`.</br>
+  If nameof_pointer used on unsupported compiler, occurs the compilation error. To suppress error define macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
 
 * To add custom enum or type names see the [example](../example/example_custom_name.cpp).
 
@@ -43,7 +52,7 @@
 
 ## `NAMEOF`
 
-* Obtains simple (unqualified) name of variable, function, macro.
+* Obtains name of variable, function, macro.
 
 * Returns `nameof::cstring` - constexpr implementation of an string. Marked `constexpr` and `noexcept`.
 
@@ -70,9 +79,14 @@
     NAMEOF(NAMEOF(structvar)) -> "NAMEOF"
     ```
 
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17</br>
+  Visual Studio >= 2017 and C++ >= 17</br>
+  GCC >= 7 and C++ >= 17</br>
+
 ## `NAMEOF_FULL`
 
-* Obtains simple (unqualified) full (with template suffix) name of variable, function, macro.
+* Obtains full (with template suffix) name of variable, function, macro.
 
 * Returns `nameof::cstring` - constexpr implementation of an string. Marked `constexpr` and `noexcept`.
 
@@ -87,6 +101,11 @@
   // Full name of template member function.
   NAMEOF_FULL(somevar.some_method<int>()) -> "some_method<int>"
   ```
+
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17</br>
+  Visual Studio >= 2017 and C++ >= 17</br>
+  GCC >= 7 and C++ >= 17</br>
 
 ## `NAMEOF_RAW`
 
@@ -103,10 +122,14 @@
   NAMEOF_RAW(&some_class::some_method<int>) -> "&some_class::some_method<int>"
   ```
 
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17</br>
+  Visual Studio >= 2017 and C++ >= 17</br>
+  GCC >= 7 and C++ >= 17</br>
 
 ## `NAMEOF_ENUM`
 
-* Obtains simple (unqualified) name of enum variable.
+* Obtains name of enum variable.
 
 * Returns `string_view`. Marked `constexpr` and `noexcept`.
 
@@ -120,9 +143,35 @@
   nameof::nameof_enum(color) -> "RED"
   ```
 
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17</br>
+  Visual Studio >= 2017 and C++ >= 17</br>
+  GCC >= 9 and C++ >= 17</br>
+
+# `NAMEOF_ENUM_OR`
+
+* Obtains name of enum variable or default value if enum variable out of range.
+
+* Returns `string`.
+
+* If argument does not have name or [out of range](limitations.md#nameof-enum), returns `default_value`.
+
+  ```cpp
+  auto color = Color::RED;
+  NAMEOF_ENUM_OR(color, "none") -> "RED"
+  NAMEOF_ENUM_OR((Color)-1, "none") -> "none"
+  nameof::nameof_enum_or(color, "none") -> "RED"
+  nameof::nameof_enum_or((Color)-1, "none") -> "none"
+  ```
+
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17</br>
+  Visual Studio >= 2017 and C++ >= 17</br>
+  GCC >= 9 and C++ >= 17</br>
+
 ## `NAMEOF_ENUM_CONST`
 
-* Obtains simple (unqualified) name of static storage enum variable.
+* Obtains name of static storage enum variable.
 
 * Returns `string_view`. Marked `constexpr` and `noexcept`.
 
@@ -137,9 +186,14 @@
   nameof::nameof_enum<Color::GREEN>() -> "GREEN"
   ```
 
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17</br>
+  Visual Studio >= 2017 and C++ >= 17</br>
+  GCC >= 9 and C++ >= 17</br>
+
 ## `NAMEOF_ENUM_FLAG`
 
-* Obtains simple (unqualified) name of enum flag variable.
+* Obtains name of enum flag variable.
 
 * Returns `string`.
 
@@ -157,10 +211,16 @@
   flag = AnimalFlags::CanFly | AnimalFlags::Endangered;
   NAMEOF_ENUM_FLAG(flag) -> "CanFly|Endangered"
   nameof_enum_flag(flag) -> "CanFly|Endangered"
+  nameof_enum_flag(flag, '$') -> "CanFly$Endangered"
 
   NAMEOF_ENUM(HasClaws | CanFly) -> ""
   nameof_enum(HasClaws | CanFly) -> ""
   ```
+
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17</br>
+  Visual Studio >= 2017 and C++ >= 17</br>
+  GCC >= 9 and C++ >= 17</br>
 
 ## `NAMEOF_TYPE`
 
@@ -183,6 +243,11 @@
   nameof::nameof_type<T>() -> "int"
   ```
 
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17</br>
+  Visual Studio >= 2017 and C++ >= 17</br>
+  GCC >= 7 and C++ >= 17</br>
+
 ## `NAMEOF_FULL_TYPE`
 
 * Obtains full type name, with reference and cv-qualifiers.
@@ -201,6 +266,11 @@
   nameof::nameof_full_type<T>() -> "const int&"
   ```
 
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17</br>
+  Visual Studio >= 2017 and C++ >= 17</br>
+  GCC >= 7 and C++ >= 17</br>
+
 ## `NAMEOF_SHORT_TYPE`
 
 * Obtains short type name.
@@ -218,6 +288,11 @@
   NAMEOF_SHORT_TYPE(T) -> "SomeClass"
   nameof::nameof_short_type<T>() -> "SomeClass"
   ```
+
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17</br>
+  Visual Studio >= 2017 and C++ >= 17</br>
+  GCC >= 7 and C++ >= 17</br>
 
 ## `NAMEOF_TYPE_EXPR`
 
@@ -240,6 +315,11 @@
   nameof::nameof_type<decltype(var)>() -> "int"
   ```
 
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17</br>
+  Visual Studio >= 2017 and C++ >= 17</br>
+  GCC >= 7 and C++ >= 17</br>
+
 ## `NAMEOF_FULL_TYPE_EXPR`
 
 * Obtains full type name of expression, with reference and cv-qualifiers.
@@ -259,6 +339,11 @@
   nameof::nameof_full_type<decltype(var)>() -> "const int&"
   ```
 
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17</br>
+  Visual Studio >= 2017 and C++ >= 17</br>
+  GCC >= 7 and C++ >= 17</br>
+
 ## `NAMEOF_SHORT_TYPE_EXPR`
 
 * Obtains short type name of expression.
@@ -277,6 +362,11 @@
   nameof::nameof_short_type<decltype(var)>() -> "SomeClass"
   ```
 
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17</br>
+  Visual Studio >= 2017 and C++ >= 17</br>
+  GCC >= 7 and C++ >= 17</br>
+
 ## `NAMEOF_TYPE_RTTI`
 
 * Obtains type name, using RTTI.
@@ -289,6 +379,11 @@
   volatile const my::detail::Base* ptr = new my::detail::Derived();
   NAMEOF_TYPE_RTTI(*ptr) -> "my::detail::Derived"
   ```
+
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled</br>
+  Visual Studio >= 2017 and C++ >= 17 and RTTI enabled</br>
+  GCC >= 7 and C++ >= 17 and RTTI enabled</br>
 
 ## `NAMEOF_FULL_TYPE_RTTI`
 
@@ -315,3 +410,53 @@
   volatile const my::detail::Base* ptr = new my::detail::Derived();
   NAMEOF_SHORT_TYPE_RTTI(*ptr) -> "Derived"
   ```
+
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled</br>
+  Visual Studio >= 2017 and C++ >= 17 and RTTI enabled</br>
+  GCC >= 7 and C++ >= 17 and RTTI enabled</br>
+
+## `NAMEOF_MEMBER`
+
+* Obtains name of member.
+
+* Returns `string_view`.
+
+* Examples
+
+  ```cpp
+  struct A {
+    int this_is_the_name;
+  };
+  // ..
+  NAMEOF_MEMBER(&A::this_is_the_name) -> "this_is_the_name"
+  nameof::nameof_member(&A::this_is_the_name) -> "this_is_the_name"
+  ```
+
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17</br>
+  Visual Studio >= 2022 and C++ >= 20</br>
+  GCC >= 7 and C++ >= 17</br>
+
+## `NAMEOF_POINTER`
+
+* Obtains name of a function, a global or class static variable.
+
+* Returns `string_view`.
+
+* Examples
+  ```cpp
+  int someglobalvariable = 0;
+  // ..
+  NAMEOF_POINTER(&someglobalconstvariable) == "someglobalconstvariable"
+  nameof::nameof_pointer(&someglobalconstvariable) == "someglobalconstvariable"
+
+  constexpr auto global_ptr = &someglobalvariable;
+  NAMEOF_POINTER(global_ptr) == "someglobalconstvariable"
+  nameof::nameof_pointer(global_ptr) == "someglobalconstvariable"
+  ```
+
+* Compiler compatibility
+  Clang/LLVM >= 5 and C++ >= 17</br>
+  Visual Studio >= 2022 and C++ >= 20</br>
+  GCC >= 7 and C++ >= 17</br>

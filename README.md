@@ -1,35 +1,15 @@
-```text
- _   _                             __    _____
-| \ | |                           / _|  / ____|_     _
-|  \| | __ _ _ __ ___   ___  ___ | |_  | |   _| |_ _| |_
-| . ` |/ _` | '_ ` _ \ / _ \/ _ \|  _| | |  |_   _|_   _|
-| |\  | (_| | | | | | |  __/ (_) | |   | |____|_|   |_|
-|_| \_|\__,_|_| |_| |_|\___|\___/|_|    \_____|
-```
-
 [![Github releases](https://img.shields.io/github/release/Neargye/nameof.svg)](https://github.com/Neargye/nameof/releases)
-[![Conan package](https://img.shields.io/badge/Conan-package-blueviolet)](https://conan.io/center/nameof)
+[![Conan package](https://img.shields.io/badge/Conan-package-blueviolet)](https://conan.io/center/recipes/nameof)
 [![Vcpkg package](https://img.shields.io/badge/Vcpkg-package-blueviolet)](https://github.com/microsoft/vcpkg/tree/master/ports/nameof)
 [![License](https://img.shields.io/github/license/Neargye/nameof.svg)](LICENSE)
-[![Try online](https://img.shields.io/badge/try-online-blue.svg)](https://wandbox.org/permlink/PBBzVKlbMIfC3WOk)
 [![Compiler explorer](https://img.shields.io/badge/compiler_explorer-online-blue.svg)](https://godbolt.org/z/s_ecko)
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://stand-with-ukraine.pp.ua)
 
 # Nameof C++
 
 Header-only C++17 library provides nameof macros and functions to simply obtain the name of a variable, type, function, macro, and enum.
 
-## Features
-
-* C++17
-* Header-only
-* Dependency-free
-* Compile-time
-* Name of variable, member variable
-* Name of type, variable type
-* Name of function, member function
-* Name of enum, enum variable
-* Name of macro
-* Enum to string
+If you like this project, please consider donating to one of the funds that help victims of the war in Ukraine: https://u24.gov.ua.
 
 ## Documentation
 
@@ -37,7 +17,7 @@ Header-only C++17 library provides nameof macros and functions to simply obtain 
 * [Limitations](doc/limitations.md)
 * [Integration](#Integration)
 
-## [Examples](example/example.cpp)
+## [Features & Examples](example/example.cpp)
 
 * Nameof
 
@@ -58,6 +38,12 @@ Header-only C++17 library provides nameof macros and functions to simply obtain 
   // Name of macro.
   NAMEOF(__LINE__) -> "__LINE__"
   NAMEOF(NAMEOF(structvar)) -> "NAMEOF"
+
+  // Obtains full name of variable, function, macro.
+  NAMEOF_FULL(somevar.some_method<int>()) -> "some_method<int>"
+
+  // Obtains raw name of variable, function, macro.
+  NAMEOF_RAW(somevar.some_method<int>()) -> "somevar.some_method<int>()"
   ```
 
 * Nameof enum
@@ -75,9 +61,13 @@ Header-only C++17 library provides nameof macros and functions to simply obtain 
   NAMEOF_ENUM_CONST(Color::GREEN) -> "GREEN"
   nameof::nameof_enum<Color::GREEN>() -> "GREEN"
 
-  // Enum flag variable to string.
+  // Enum flags variable to string.
   NAMEOF_ENUM_FLAG(Color::GREEN | Color::BLUE) -> "GREEN|BLUE"
-  nameof::nameof_enum_flag<Color::GREEN>() -> "GREEN|BLUE"
+  nameof::nameof_enum_flag<Color::GREEN | Color::BLUE>() -> "GREEN|BLUE"
+
+  // Obtains name of enum variable or default value if enum variable out of range.
+  NAMEOF_ENUM_OR(Color::GREEN) -> "GREEN"
+  NAMEOF_ENUM_OR((Color)0, "none") -> "none"
   ```
 
 * Nameof type
@@ -106,19 +96,22 @@ Header-only C++17 library provides nameof macros and functions to simply obtain 
   NAMEOF_TYPE_RTTI(*ptr) -> "my::detail::Derived"
   NAMEOF_FULL_TYPE_RTTI(*ptr) -> "volatile const my::detail::Derived&"
   NAMEOF_SHORT_TYPE_RTTI(*ptr) -> "Derived"
-  ```
 
-* Compile-time
+  struct A {
+    int this_is_the_name;
+  };
+  // Obtains name of member.
+  NAMEOF_MEMBER(&A::this_is_the_name) -> "this_is_the_name"
+  nameof::nameof_member(&A::this_is_the_name) -> "this_is_the_name"
 
-  ```cpp
-  constexpr auto somevar_name = NAMEOF(somevar);
-  // somevar_name -> "somevar"
-  constexpr auto color_name = NAMEOF_ENUM(Color::BLUE); // or nameof::nameof_enum(Color::BLUE)
-  // color_name -> "BLUE"
-  constexpr auto var_type_name = NAMEOF_TYPE_EXPR(var); // or nameof::nameof_type<decltype(var)>()
-  // var_type_name -> "int"
-  constexpr auto type_name = NAMEOF_TYPE(T); // or nameof::nameof_type<T>()
-  // type_name -> "int"
+  int someglobalvariable = 0;
+  // Obtains name of a function, a global or class static variable.
+  NAMEOF_POINTER(&someglobalconstvariable) == "someglobalconstvariable"
+  nameof::nameof_pointer(&someglobalconstvariable) == "someglobalconstvariable"
+
+  constexpr auto global_ptr = &someglobalvariable;
+  NAMEOF_POINTER(global_ptr) == "someglobalconstvariable"
+  nameof::nameof_pointer(global_ptr) == "someglobalconstvariable"
   ```
 
 ## Remarks
@@ -147,9 +140,6 @@ CPMAddPackage(
 
 ## Compiler compatibility
 
-* Clang/LLVM >= 5
-* MSVC++ >= 14.11 / Visual Studio >= 2017
-* Xcode >= 10
-* GCC >= 7 (GCC >= 9 for NAMEOF_ENUM)
+Check in the [reference](doc/reference.md) for each features.
 
 ## Licensed under the [MIT License](LICENSE)

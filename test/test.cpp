@@ -1,6 +1,6 @@
 // Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2018 - 2021 Daniil Goncharov <neargye@gmail.com>.
+// Copyright (c) 2018 - 2024 Daniil Goncharov <neargye@gmail.com>.
 //
 // Permission is hereby  granted, free of charge, to any  person obtaining a copy
 // of this software and associated  documentation files (the "Software"), to deal
@@ -46,7 +46,15 @@ struct SomeStruct {
   int SomeMethod2() const {
     throw std::runtime_error{"should not be called!"};
   }
+
+  static int somestaticfield;
+  constexpr static int someotherstaticfield = 21;
 };
+
+int SomeStruct::somestaticfield;
+
+int someglobalvariable = 0;
+const int someglobalconstvariable = 42;
 
 void SomeMethod3() {
   throw std::runtime_error{"should not be called!"};
@@ -107,7 +115,13 @@ struct nameof::customize::enum_range<number> {
   static_assert(max > min, "nameof::enum_range<number> requires max > min.");
 };
 
-struct TestRtti{
+enum class OutOfRange {
+  too_low = NAMEOF_ENUM_RANGE_MIN - 1,
+  required_to_work = 0,
+  too_high = NAMEOF_ENUM_RANGE_MAX + 1
+};
+
+struct TestRtti {
   struct Base { virtual ~Base() = default; };
   struct Derived : Base {};
 };
@@ -440,6 +454,28 @@ TEST_CASE("NAMEOF_ENUM_FLAG") {
   REQUIRE(NAMEOF_ENUM_FLAG(static_cast<BigFlags>((static_cast<std::uint64_t>(0x1) << 63) | 1)) == "A|D");
   NAMEOF_DEBUG_REQUIRE(NAMEOF_ENUM_FLAG(static_cast<BigFlags>(2)).empty());
   NAMEOF_DEBUG_REQUIRE(NAMEOF_ENUM_FLAG(static_cast<BigFlags>((static_cast<std::uint64_t>(0x1) << 63) | 2)).empty());
+}
+
+TEST_CASE("nameof_enum_or") {
+  OutOfRange low = OutOfRange::too_low;
+  OutOfRange high = OutOfRange::too_high;
+  auto low_name = nameof::nameof_enum_or(low, "-121");
+  auto high_name = nameof::nameof_enum_or(high, "121");
+  constexpr OutOfRange oor[] = {OutOfRange::too_high, OutOfRange::too_low};
+  REQUIRE(low_name == "-121");
+  REQUIRE(high_name == "121");
+  REQUIRE(nameof::nameof_enum_or(oor[0], "121") == "121");
+}
+
+TEST_CASE("NAMEOF_ENUM_OR") {
+  OutOfRange low = OutOfRange::too_low;
+  OutOfRange high = OutOfRange::too_high;
+  auto low_name = NAMEOF_ENUM_OR(low, "-121");
+  auto high_name = NAMEOF_ENUM_OR(high, "121");
+  constexpr OutOfRange oor[] = {OutOfRange::too_high, OutOfRange::too_low};
+  REQUIRE(low_name == "-121");
+  REQUIRE(high_name == "121");
+  REQUIRE(NAMEOF_ENUM_OR(oor[0], "121") == "121");
 }
 
 #endif
@@ -882,12 +918,23 @@ TEST_CASE("NAMEOF_SHORT_TYPE_RTTI") {
 
 #if defined(NAMEOF_MEMBER_SUPPORTED) && NAMEOF_MEMBER_SUPPORTED
 
+struct StructMemberInitializationUsingNameof {
+  std::string teststringfield = std::string{nameof::nameof_member<&StructMemberInitializationUsingNameof::teststringfield>()};
+};
+
+struct StructWithNonConstexprDestructor {
+  ~StructWithNonConstexprDestructor() {}
+  int somefield;
+};
+
 TEST_CASE("NAMEOF_MEMBER") {
   REQUIRE(NAMEOF_MEMBER(&SomeStruct::somefield) == "somefield");
   REQUIRE(NAMEOF_MEMBER(&SomeStruct::SomeMethod1) == "SomeMethod1");
   REQUIRE(NAMEOF_MEMBER(&Long::LL::field) == "field");
   constexpr auto member_ptr = &SomeStruct::somefield;
   REQUIRE(NAMEOF_MEMBER(member_ptr) == "somefield");
+  REQUIRE(NAMEOF_MEMBER(&StructMemberInitializationUsingNameof::teststringfield) == "teststringfield");
+  REQUIRE(NAMEOF_MEMBER(&StructWithNonConstexprDestructor::somefield) == "somefield");
 }
 
 TEST_CASE("nameof_member") {
@@ -896,6 +943,36 @@ TEST_CASE("nameof_member") {
   REQUIRE(nameof::nameof_member<&Long::LL::field>() == "field");
   constexpr auto member_ptr = &SomeStruct::somefield;
   REQUIRE(nameof::nameof_member<member_ptr>() == "somefield");
+  REQUIRE(nameof::nameof_member<&StructMemberInitializationUsingNameof::teststringfield>() == "teststringfield");
+  REQUIRE(nameof::nameof_member<&StructWithNonConstexprDestructor::somefield>() == "somefield");
+}
+
+#endif
+
+#if defined(NAMEOF_POINTER_SUPPORTED) && NAMEOF_POINTER_SUPPORTED
+
+void somefunction() {}
+
+TEST_CASE("NAMEOF_POINTER") {
+  REQUIRE(NAMEOF_POINTER(&SomeStruct::somestaticfield) == "somestaticfield");
+  REQUIRE(NAMEOF_POINTER(&SomeStruct::someotherstaticfield) == "someotherstaticfield");
+  REQUIRE(NAMEOF_POINTER(static_cast<const char*>(nullptr)) == "nullptr");
+  REQUIRE(NAMEOF_POINTER(static_cast<int***>(nullptr)) == "nullptr");
+  constexpr auto global_ptr = &someglobalvariable;
+  REQUIRE(NAMEOF_POINTER(global_ptr) == "someglobalvariable");
+  REQUIRE(NAMEOF_POINTER(&someglobalconstvariable) == "someglobalconstvariable");
+  REQUIRE(NAMEOF_POINTER(&somefunction) == "somefunction");
+}
+
+TEST_CASE("nameof_pointer") {
+  REQUIRE(nameof::nameof_pointer<&SomeStruct::somestaticfield>() == "somestaticfield");
+  REQUIRE(nameof::nameof_pointer<&SomeStruct::someotherstaticfield>() == "someotherstaticfield");
+  REQUIRE(nameof::nameof_pointer<static_cast<const char*>(nullptr)>() == "nullptr");
+  REQUIRE(nameof::nameof_pointer<static_cast<int***>(nullptr)>() == "nullptr");
+  constexpr auto global_ptr = &someglobalvariable;
+  REQUIRE(nameof::nameof_pointer<global_ptr>() == "someglobalvariable");
+  REQUIRE(nameof::nameof_pointer<&someglobalconstvariable>() == "someglobalconstvariable");
+  REQUIRE(nameof::nameof_pointer<&somefunction>() == "somefunction");
 }
 
 #endif
