@@ -993,12 +993,12 @@ From get_base_type(Type From::*);
 template <typename T>
 extern T nonexist_object;
 
-template <class T>
+template <typename T>
 struct Store {
   T v;
 };
 
-template <class T>
+template <typename T>
 Store(T) -> Store<T>;
 
 template <auto V>
@@ -1194,7 +1194,7 @@ template <auto V, std::enable_if_t<std::is_pointer_v<decltype(V)>, int> = 0>
 
 } // namespace nameof
 
-#if __has_include(<format>)
+#if (defined(_MSVC_LANG) ? (_MSVC_LANG >= 202002L) : (__cplusplus >= 202002L)) && __has_include(<format>)
 #  include <format>
 
 #  if defined(__cpp_lib_format) && __cpp_lib_format >= 201907L
