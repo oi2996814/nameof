@@ -29,8 +29,8 @@
 * To check is nameof_type supported compiler use macro `NAMEOF_TYPE_SUPPORTED` or constexpr constant `nameof::is_nameof_type_supported`.</br>
   If nameof_type used on unsupported compiler, occurs the compilation error. To suppress error define macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
 
-* To check is nameof_type_rtti supported compiler use macro `NAMEOF_TYPE_RTTI_SUPPORTED` or constexpr constant `nameof::is_nameof_type_rtti_supported`.</br>
-  If nameof_type used on unsupported compiler, occurs the compilation error. To suppress error define macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
+* To check if nameof_type_rtti is supported by your compiler use macro `NAMEOF_TYPE_RTTI_SUPPORTED` or constexpr constant `nameof::is_nameof_type_rtti_supported`.</br>
+  If nameof_type_rtti is used on an unsupported compiler, a compilation error occurs. To suppress the error define macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
 
 * To check is nameof_member supported compiler use macro `NAMEOF_MEMBER_SUPPORTED` or constexpr constant `nameof::is_nameof_member_supported`.</br>
   If nameof_member used on unsupported compiler, occurs the compilation error. To suppress error define macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
@@ -136,7 +136,9 @@
 
 * Returns `string_view`. Marked `constexpr` and `noexcept`.
 
-* If the argument does not have a name or is [out of range](limitations.md#nameof-enum), returns an empty `string_view`.
+* If the enum type has no reflected values in the configured [range](limitations.md#nameof-enum), a compilation error occurs.
+
+* Otherwise, returns an empty `string_view` if the argument does not have a name or is out of range.
 
 * Examples
 
@@ -200,7 +202,9 @@
 
 * Returns `string`.
 
-* If the value is zero or contains an unnamed flag, returns an empty `string`.
+* At least one named single-bit enumerator is required; otherwise a compilation error occurs. Composite enumerator names are not used.
+
+* If the value is zero or contains an unnamed bit, returns an empty `string`.
 
 * Examples
 

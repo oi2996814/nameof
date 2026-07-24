@@ -1227,8 +1227,8 @@ template <typename E>
   return {}; // Invalid value.
 }
 
-// Obtains name of static storage enum variable.
-// This version is much lighter on the compile times and is not restricted to the enum_range limitation.
+// Obtains name of an enum value known at compile time.
+// This version has a lower compile-time cost and is not restricted by the enum_range limitation.
 template <auto V, detail::enable_if_enum_t<decltype(V), int> = 0>
 [[nodiscard]] constexpr const auto& nameof_enum() noexcept {
   using D = std::decay_t<decltype(V)>;
@@ -1340,8 +1340,8 @@ struct fmt::formatter<nameof::cstring<N>> : fmt::formatter<fmt::string_view> {
 // Obtains name of enum value or default value if no name is available.
 #define NAMEOF_ENUM_OR(...) ::nameof::nameof_enum_or(__VA_ARGS__)
 
-// Obtains name of static storage enum variable.
-// This version is much lighter on the compile times and is not restricted to the enum_range limitation.
+// Obtains name of an enum value known at compile time.
+// This version has a lower compile-time cost and is not restricted by the enum_range limitation.
 #define NAMEOF_ENUM_CONST(...) ::nameof::nameof_enum<__VA_ARGS__>()
 
 // Obtains name of enum flag value.

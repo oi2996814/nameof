@@ -55,8 +55,8 @@ If you like this project, please consider donating to one of the funds that help
   NAMEOF_ENUM(color) -> "RED"
   nameof::nameof_enum(color) -> "RED"
 
-  // Static storage enum variable to string.
-  // This version is much lighter on the compile times and is not restricted to the enum_range limitation.
+  // Name of an enum value known at compile time.
+  // This version has a lower compile-time cost and is not restricted by the enum_range limitation.
   NAMEOF_ENUM_CONST(Color::GREEN) -> "GREEN"
   nameof::nameof_enum<Color::GREEN>() -> "GREEN"
 
