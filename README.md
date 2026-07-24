@@ -1,6 +1,6 @@
-[![Github releases](https://img.shields.io/github/release/Neargye/nameof.svg)](https://github.com/Neargye/nameof/releases)
+[![GitHub releases](https://img.shields.io/github/release/Neargye/nameof.svg)](https://github.com/Neargye/nameof/releases)
 [![Conan package](https://img.shields.io/badge/Conan-package-blueviolet)](https://conan.io/center/recipes/nameof)
-[![Vcpkg package](https://img.shields.io/badge/Vcpkg-package-blueviolet)](https://github.com/microsoft/vcpkg/tree/master/ports/nameof)
+[![vcpkg package](https://img.shields.io/badge/vcpkg-package-blueviolet)](https://github.com/microsoft/vcpkg/tree/master/ports/nameof)
 [![License](https://img.shields.io/github/license/Neargye/nameof.svg)](LICENSE)
 [![Compiler explorer](https://img.shields.io/badge/compiler_explorer-online-blue.svg)](https://godbolt.org/z/s_ecko)
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://stand-with-ukraine.pp.ua)
@@ -19,7 +19,7 @@ If you like this project, please consider donating to one of the funds that help
 
 ## [Features & Examples](example/example.cpp)
 
-* Nameof
+* **Nameof**
 
   ```cpp
   // Name of variable.
@@ -45,7 +45,7 @@ If you like this project, please consider donating to one of the funds that help
   NAMEOF_RAW(somevar.some_method<int>()) -> "somevar.some_method<int>()"
   ```
 
-* Nameof enum
+* **Nameof enum**
 
   ```cpp
   enum class Color { RED = 1, BLUE = 2, GREEN = 4 };
@@ -72,7 +72,7 @@ If you like this project, please consider donating to one of the funds that help
   NAMEOF_ENUM_OR((Color)0, "none") -> "none"
   ```
 
-* Nameof type
+* **Nameof type**
 
   ```cpp
   const my::detail::SomeClass<int>& var_ref = var;
@@ -132,13 +132,13 @@ find_package(nameof CONFIG REQUIRED)
 target_link_libraries(your_target PRIVATE nameof::nameof)
 ```
 
-If you are using [vcpkg](https://github.com/Microsoft/vcpkg/) on your project for external dependencies, then you can use the [nameof package](https://github.com/microsoft/vcpkg/tree/master/ports/nameof).
+If you use [vcpkg](https://github.com/Microsoft/vcpkg/), install the [nameof package](https://github.com/microsoft/vcpkg/tree/master/ports/nameof).
 
-If you are using [Conan](https://www.conan.io/) to manage your dependencies, merely add `nameof/x.y.z` to your conan's requires, where `x.y.z` is the release version you want to use.
+If you use [Conan](https://www.conan.io/) to manage your dependencies, add `nameof/x.y.z` to the `requires` section, where `x.y.z` is the release version you want to use.
 
-Archlinux users can install `nameof` by package manager AUR, using the following command: `yay -S nameof`.
+Arch Linux users can install `nameof` from the AUR with an AUR helper such as `yay`: `yay -S nameof`.
 
-Alternatively, you can use something like [CPM](https://github.com/TheLartians/CPM) which is based on CMake's `Fetch_Content` module.
+Alternatively, use [CPM](https://github.com/TheLartians/CPM), which is based on CMake's `FetchContent` module.
 
 ```cmake
 CPMAddPackage(

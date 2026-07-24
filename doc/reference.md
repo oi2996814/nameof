@@ -60,7 +60,7 @@
 
 * Returns `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
-* If the argument does not have a name, compilation fails with `"Expression does not have a name."`.
+* If the argument does not have a name, compilation fails with the following diagnostic: `"Expression does not have a name."`
 
 * Examples
 
@@ -83,9 +83,9 @@
     ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17<br>
-  Visual Studio >= 2017 and C++ >= 17<br>
-  GCC >= 7 and C++ >= 17<br>
+  * Clang/LLVM >= 5 and C++ >= 17
+  * Visual Studio >= 2017 and C++ >= 17
+  * GCC >= 7 and C++ >= 17
 
 ## `NAMEOF_FULL`
 
@@ -93,7 +93,7 @@
 
 * Returns `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
-* If the argument does not have a name, compilation fails with `"Expression does not have a name."`.
+* If the argument does not have a name, compilation fails with the following diagnostic: `"Expression does not have a name."`
 
 * Examples
 
@@ -106,9 +106,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17<br>
-  Visual Studio >= 2017 and C++ >= 17<br>
-  GCC >= 7 and C++ >= 17<br>
+  * Clang/LLVM >= 5 and C++ >= 17
+  * Visual Studio >= 2017 and C++ >= 17
+  * GCC >= 7 and C++ >= 17
 
 ## `NAMEOF_RAW`
 
@@ -116,7 +116,7 @@
 
 * Returns `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
-* If the argument does not have a name, compilation fails with `"Expression does not have a name."`.
+* If the argument does not have a name, compilation fails with the following diagnostic: `"Expression does not have a name."`
 
 * Examples
 
@@ -126,9 +126,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17<br>
-  Visual Studio >= 2017 and C++ >= 17<br>
-  GCC >= 7 and C++ >= 17<br>
+  * Clang/LLVM >= 5 and C++ >= 17
+  * Visual Studio >= 2017 and C++ >= 17
+  * GCC >= 7 and C++ >= 17
 
 ## `NAMEOF_ENUM`
 
@@ -149,9 +149,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17<br>
-  Visual Studio >= 2017 and C++ >= 17<br>
-  GCC >= 9 and C++ >= 17<br>
+  * Clang/LLVM >= 5 and C++ >= 17
+  * Visual Studio >= 2017 and C++ >= 17
+  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_ENUM_OR`
 
@@ -170,9 +170,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17<br>
-  Visual Studio >= 2017 and C++ >= 17<br>
-  GCC >= 9 and C++ >= 17<br>
+  * Clang/LLVM >= 5 and C++ >= 17
+  * Visual Studio >= 2017 and C++ >= 17
+  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_ENUM_CONST`
 
@@ -192,9 +192,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17<br>
-  Visual Studio >= 2017 and C++ >= 17<br>
-  GCC >= 9 and C++ >= 17<br>
+  * Clang/LLVM >= 5 and C++ >= 17
+  * Visual Studio >= 2017 and C++ >= 17
+  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_ENUM_FLAG`
 
@@ -225,9 +225,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17<br>
-  Visual Studio >= 2017 and C++ >= 17<br>
-  GCC >= 9 and C++ >= 17<br>
+  * Clang/LLVM >= 5 and C++ >= 17
+  * Visual Studio >= 2017 and C++ >= 17
+  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_TYPE`
 
@@ -239,7 +239,7 @@
 
 * Returns compiler-specific type name.
 
-* If the type does not have a name, compilation fails with `"Type does not have a name."`.
+* If the type does not have a name, compilation fails with the following diagnostic: `"Type does not have a name."`
 
 * Examples
 
@@ -250,9 +250,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17<br>
-  Visual Studio >= 2017 and C++ >= 17<br>
-  GCC >= 7 and C++ >= 17<br>
+  * Clang/LLVM >= 5 and C++ >= 17
+  * Visual Studio >= 2017 and C++ >= 17
+  * GCC >= 7 and C++ >= 17
 
 ## `NAMEOF_FULL_TYPE`
 
@@ -262,7 +262,7 @@
 
 * Returns compiler-specific type name.
 
-* If the type does not have a name, compilation fails with `"Type does not have a name."`.
+* If the type does not have a name, compilation fails with the following diagnostic: `"Type does not have a name."`
 
 * Examples
 
@@ -273,9 +273,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17<br>
-  Visual Studio >= 2017 and C++ >= 17<br>
-  GCC >= 7 and C++ >= 17<br>
+  * Clang/LLVM >= 5 and C++ >= 17
+  * Visual Studio >= 2017 and C++ >= 17
+  * GCC >= 7 and C++ >= 17
 
 ## `NAMEOF_SHORT_TYPE`
 
@@ -285,7 +285,7 @@
 
 * Returns compiler-specific type name.
 
-* If the type does not have a name, compilation fails with `"Type does not have a name."`.
+* If the type does not have a name, compilation fails with the following diagnostic: `"Type does not have a name."`
 
 * Examples
 
@@ -296,9 +296,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17<br>
-  Visual Studio >= 2017 and C++ >= 17<br>
-  GCC >= 7 and C++ >= 17<br>
+  * Clang/LLVM >= 5 and C++ >= 17
+  * Visual Studio >= 2017 and C++ >= 17
+  * GCC >= 7 and C++ >= 17
 
 ## `NAMEOF_TYPE_EXPR`
 
@@ -310,7 +310,7 @@
 
 * In all cases, reference and cv-qualifiers are ignored.
 
-* If the type does not have a name, compilation fails with `"Type does not have a name."`.
+* If the type does not have a name, compilation fails with the following diagnostic: `"Type does not have a name."`
 
 * Examples
 
@@ -322,9 +322,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17<br>
-  Visual Studio >= 2017 and C++ >= 17<br>
-  GCC >= 7 and C++ >= 17<br>
+  * Clang/LLVM >= 5 and C++ >= 17
+  * Visual Studio >= 2017 and C++ >= 17
+  * GCC >= 7 and C++ >= 17
 
 ## `NAMEOF_FULL_TYPE_EXPR`
 
@@ -334,7 +334,7 @@
 
 * Returns compiler-specific type name.
 
-* If the type does not have a name, compilation fails with `"Type does not have a name."`.
+* If the type does not have a name, compilation fails with the following diagnostic: `"Type does not have a name."`
 
 * Examples
 
@@ -346,9 +346,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17<br>
-  Visual Studio >= 2017 and C++ >= 17<br>
-  GCC >= 7 and C++ >= 17<br>
+  * Clang/LLVM >= 5 and C++ >= 17
+  * Visual Studio >= 2017 and C++ >= 17
+  * GCC >= 7 and C++ >= 17
 
 ## `NAMEOF_SHORT_TYPE_EXPR`
 
@@ -358,7 +358,7 @@
 
 * Returns compiler-specific type name.
 
-* If the type does not have a name, compilation fails with `"Type does not have a name."`.
+* If the type does not have a name, compilation fails with the following diagnostic: `"Type does not have a name."`
 
 * Examples
 
@@ -369,9 +369,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17<br>
-  Visual Studio >= 2017 and C++ >= 17<br>
-  GCC >= 7 and C++ >= 17<br>
+  * Clang/LLVM >= 5 and C++ >= 17
+  * Visual Studio >= 2017 and C++ >= 17
+  * GCC >= 7 and C++ >= 17
 
 ## `NAMEOF_TYPE_RTTI`
 
@@ -387,9 +387,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled<br>
-  Visual Studio >= 2017 and C++ >= 17 and RTTI enabled<br>
-  GCC >= 7 and C++ >= 17 and RTTI enabled<br>
+  * Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled
+  * Visual Studio >= 2017 and C++ >= 17 and RTTI enabled
+  * GCC >= 7 and C++ >= 17 and RTTI enabled
 
 ## `NAMEOF_FULL_TYPE_RTTI`
 
@@ -406,9 +406,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled<br>
-  Visual Studio >= 2017 and C++ >= 17 and RTTI enabled<br>
-  GCC >= 7 and C++ >= 17 and RTTI enabled<br>
+  * Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled
+  * Visual Studio >= 2017 and C++ >= 17 and RTTI enabled
+  * GCC >= 7 and C++ >= 17 and RTTI enabled
 
 ## `NAMEOF_SHORT_TYPE_RTTI`
 
@@ -424,9 +424,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled<br>
-  Visual Studio >= 2017 and C++ >= 17 and RTTI enabled<br>
-  GCC >= 7 and C++ >= 17 and RTTI enabled<br>
+  * Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled
+  * Visual Studio >= 2017 and C++ >= 17 and RTTI enabled
+  * GCC >= 7 and C++ >= 17 and RTTI enabled
 
 ## `NAMEOF_MEMBER`
 
@@ -446,9 +446,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17<br>
-  Visual Studio >= 2022 and C++ >= 20<br>
-  GCC >= 7 and C++ >= 17<br>
+  * Clang/LLVM >= 5 and C++ >= 17
+  * Visual Studio >= 2022 and C++ >= 20
+  * GCC >= 7 and C++ >= 17
 
 ## `NAMEOF_POINTER`
 
@@ -470,6 +470,6 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17<br>
-  Visual Studio >= 2022 and C++ >= 20<br>
-  GCC >= 7 and C++ >= 17<br>
+  * Clang/LLVM >= 5 and C++ >= 17
+  * Visual Studio >= 2022 and C++ >= 20
+  * GCC >= 7 and C++ >= 17

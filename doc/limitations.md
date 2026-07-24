@@ -2,13 +2,13 @@
 
 ## Nameof
 
-* If the argument does not have a name, compilation fails with `"Expression does not have a name."`.
+* If the argument does not have a name, compilation fails with the following diagnostic: `"Expression does not have a name."`
 
 ## Nameof Type
 
 * This library uses a compiler-specific hack (based on `__PRETTY_FUNCTION__` / `__FUNCSIG__`).
 
-* nameof_type and nameof_type_rtti return a compiler-specific type name.
+* `nameof::nameof_type<T>()` and `NAMEOF_TYPE_RTTI` return compiler-specific type names.
 
 * To check whether nameof_type is supported by your compiler, use the macro `NAMEOF_TYPE_SUPPORTED` or the constexpr constant `nameof::is_nameof_type_supported`.<br>
   If nameof_type is used on an unsupported compiler, a compilation error occurs. To suppress the check, define the macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
@@ -24,7 +24,7 @@
 
 ## Nameof Enum
 
-* This library uses a compiler-specific hack (based on `__PRETTY_FUNCTION__` / `__FUNCSIG__`), which works on Clang >= 5, MSVC >= 15.3 and GCC >= 9.
+* This library uses a compiler-specific hack (based on `__PRETTY_FUNCTION__` / `__FUNCSIG__`), which works on Clang >= 5, Visual Studio >= 2017, and GCC >= 9.
 
 * To check whether nameof_enum is supported by your compiler, use the macro `NAMEOF_ENUM_SUPPORTED` or the constexpr constant `nameof::is_nameof_enum_supported`.<br>
   If nameof_enum is used on an unsupported compiler, a compilation error occurs. To suppress the check, define the macro `NAMEOF_ENUM_NO_CHECK_SUPPORT`.
@@ -45,7 +45,7 @@
     #include <nameof.hpp>
     ```
 
-  * If another range is needed for a specific enum type, add specialization `enum_range` for necessary enum type. Specialization of `enum_range` must be injected in `namespace nameof::customize`.
+  * If another range is needed for a specific enum type, specialize `enum_range` for that type in `namespace nameof::customize`.
 
     ```cpp
     #include <nameof.hpp>
