@@ -21,22 +21,22 @@
 
 ## Synopsis
 
-* Before use, read the [limitations](limitations.md) of functionality.
+* Before use, read the [limitations](limitations.md).
 
-* To check is nameof_enum supported compiler use macro `NAMEOF_ENUM_SUPPORTED` or constexpr constant `nameof::is_nameof_enum_supported`.</br>
-  If nameof_enum used on unsupported compiler, occurs the compilation error. To suppress error define macro `NAMEOF_ENUM_NO_CHECK_SUPPORT`.
+* To check whether nameof_enum is supported by your compiler, use the macro `NAMEOF_ENUM_SUPPORTED` or the constexpr constant `nameof::is_nameof_enum_supported`.<br>
+  If nameof_enum is used on an unsupported compiler, a compilation error occurs. To suppress the check, define the macro `NAMEOF_ENUM_NO_CHECK_SUPPORT`.
 
-* To check is nameof_type supported compiler use macro `NAMEOF_TYPE_SUPPORTED` or constexpr constant `nameof::is_nameof_type_supported`.</br>
-  If nameof_type used on unsupported compiler, occurs the compilation error. To suppress error define macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
+* To check whether nameof_type is supported by your compiler, use the macro `NAMEOF_TYPE_SUPPORTED` or the constexpr constant `nameof::is_nameof_type_supported`.<br>
+  If nameof_type is used on an unsupported compiler, a compilation error occurs. To suppress the check, define the macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
 
-* To check if nameof_type_rtti is supported by your compiler use macro `NAMEOF_TYPE_RTTI_SUPPORTED` or constexpr constant `nameof::is_nameof_type_rtti_supported`.</br>
-  If nameof_type_rtti is used on an unsupported compiler, a compilation error occurs. To suppress the error define macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
+* To check whether nameof_type_rtti is supported by your compiler, use the macro `NAMEOF_TYPE_RTTI_SUPPORTED` or the constexpr constant `nameof::is_nameof_type_rtti_supported`.<br>
+  If nameof_type_rtti is used on an unsupported compiler, a compilation error occurs. To suppress the check, define the macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
 
-* To check is nameof_member supported compiler use macro `NAMEOF_MEMBER_SUPPORTED` or constexpr constant `nameof::is_nameof_member_supported`.</br>
-  If nameof_member used on unsupported compiler, occurs the compilation error. To suppress error define macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
+* To check whether nameof_member is supported by your compiler, use the macro `NAMEOF_MEMBER_SUPPORTED` or the constexpr constant `nameof::is_nameof_member_supported`.<br>
+  If nameof_member is used on an unsupported compiler, a compilation error occurs. To suppress the check, define the macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
 
-* To check is nameof_pointer supported compiler use macro `NAMEOF_POINTER_SUPPORTED` or constexpr constant `nameof::is_nameof_pointer_supported`.</br>
-  If nameof_pointer used on unsupported compiler, occurs the compilation error. To suppress error define macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
+* To check whether nameof_pointer is supported by your compiler, use the macro `NAMEOF_POINTER_SUPPORTED` or the constexpr constant `nameof::is_nameof_pointer_supported`.<br>
+  If nameof_pointer is used on an unsupported compiler, a compilation error occurs. To suppress the check, define the macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
 
 * To add custom enum or type names see the [example](../example/example_custom_name.cpp).
 
@@ -60,7 +60,7 @@
 
 * Returns `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
-* If argument does not have name, occurs the compilation error `"Expression does not have a name."`.
+* If the argument does not have a name, compilation fails with `"Expression does not have a name."`.
 
 * Examples
 
@@ -83,9 +83,9 @@
     ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17</br>
-  Visual Studio >= 2017 and C++ >= 17</br>
-  GCC >= 7 and C++ >= 17</br>
+  Clang/LLVM >= 5 and C++ >= 17<br>
+  Visual Studio >= 2017 and C++ >= 17<br>
+  GCC >= 7 and C++ >= 17<br>
 
 ## `NAMEOF_FULL`
 
@@ -93,7 +93,7 @@
 
 * Returns `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
-* If argument does not have name, occurs the compilation error `"Expression does not have a name."`.
+* If the argument does not have a name, compilation fails with `"Expression does not have a name."`.
 
 * Examples
 
@@ -106,9 +106,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17</br>
-  Visual Studio >= 2017 and C++ >= 17</br>
-  GCC >= 7 and C++ >= 17</br>
+  Clang/LLVM >= 5 and C++ >= 17<br>
+  Visual Studio >= 2017 and C++ >= 17<br>
+  GCC >= 7 and C++ >= 17<br>
 
 ## `NAMEOF_RAW`
 
@@ -116,7 +116,7 @@
 
 * Returns `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
-* If argument does not have name, occurs the compilation error `"Expression does not have a name."`.
+* If the argument does not have a name, compilation fails with `"Expression does not have a name."`.
 
 * Examples
 
@@ -126,9 +126,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17</br>
-  Visual Studio >= 2017 and C++ >= 17</br>
-  GCC >= 7 and C++ >= 17</br>
+  Clang/LLVM >= 5 and C++ >= 17<br>
+  Visual Studio >= 2017 and C++ >= 17<br>
+  GCC >= 7 and C++ >= 17<br>
 
 ## `NAMEOF_ENUM`
 
@@ -149,9 +149,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17</br>
-  Visual Studio >= 2017 and C++ >= 17</br>
-  GCC >= 9 and C++ >= 17</br>
+  Clang/LLVM >= 5 and C++ >= 17<br>
+  Visual Studio >= 2017 and C++ >= 17<br>
+  GCC >= 9 and C++ >= 17<br>
 
 ## `NAMEOF_ENUM_OR`
 
@@ -170,9 +170,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17</br>
-  Visual Studio >= 2017 and C++ >= 17</br>
-  GCC >= 9 and C++ >= 17</br>
+  Clang/LLVM >= 5 and C++ >= 17<br>
+  Visual Studio >= 2017 and C++ >= 17<br>
+  GCC >= 9 and C++ >= 17<br>
 
 ## `NAMEOF_ENUM_CONST`
 
@@ -192,9 +192,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17</br>
-  Visual Studio >= 2017 and C++ >= 17</br>
-  GCC >= 9 and C++ >= 17</br>
+  Clang/LLVM >= 5 and C++ >= 17<br>
+  Visual Studio >= 2017 and C++ >= 17<br>
+  GCC >= 9 and C++ >= 17<br>
 
 ## `NAMEOF_ENUM_FLAG`
 
@@ -225,22 +225,21 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17</br>
-  Visual Studio >= 2017 and C++ >= 17</br>
-  GCC >= 9 and C++ >= 17</br>
+  Clang/LLVM >= 5 and C++ >= 17<br>
+  Visual Studio >= 2017 and C++ >= 17<br>
+  GCC >= 9 and C++ >= 17<br>
 
 ## `NAMEOF_TYPE`
 
 * Obtains type name, reference and cv-qualifiers are ignored.
 
-* Returns reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
+* Returns a reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
 * In all cases, reference and cv-qualifiers are ignored by `NAMEOF_TYPE` (that is, `NAMEOF_TYPE(const T&) == NAMEOF_TYPE(T)`).
 
 * Returns compiler-specific type name.
 
-* If type does not have name, occurs the compilation error `"Type does not have a name."`.
-
+* If the type does not have a name, compilation fails with `"Type does not have a name."`.
 
 * Examples
 
@@ -251,19 +250,19 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17</br>
-  Visual Studio >= 2017 and C++ >= 17</br>
-  GCC >= 7 and C++ >= 17</br>
+  Clang/LLVM >= 5 and C++ >= 17<br>
+  Visual Studio >= 2017 and C++ >= 17<br>
+  GCC >= 7 and C++ >= 17<br>
 
 ## `NAMEOF_FULL_TYPE`
 
 * Obtains full type name, with reference and cv-qualifiers.
 
-* Returns reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
+* Returns a reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
 * Returns compiler-specific type name.
 
-* If type does not have name, occurs the compilation error `"Type does not have a name."`.
+* If the type does not have a name, compilation fails with `"Type does not have a name."`.
 
 * Examples
 
@@ -274,19 +273,19 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17</br>
-  Visual Studio >= 2017 and C++ >= 17</br>
-  GCC >= 7 and C++ >= 17</br>
+  Clang/LLVM >= 5 and C++ >= 17<br>
+  Visual Studio >= 2017 and C++ >= 17<br>
+  GCC >= 7 and C++ >= 17<br>
 
 ## `NAMEOF_SHORT_TYPE`
 
 * Obtains short type name.
 
-* Returns reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
+* Returns a reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
 * Returns compiler-specific type name.
 
-* If type does not have name, occurs the compilation error `"Type does not have a name."`.
+* If the type does not have a name, compilation fails with `"Type does not have a name."`.
 
 * Examples
 
@@ -297,21 +296,21 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17</br>
-  Visual Studio >= 2017 and C++ >= 17</br>
-  GCC >= 7 and C++ >= 17</br>
+  Clang/LLVM >= 5 and C++ >= 17<br>
+  Visual Studio >= 2017 and C++ >= 17<br>
+  GCC >= 7 and C++ >= 17<br>
 
 ## `NAMEOF_TYPE_EXPR`
 
 * Obtains type name of expression, reference and cv-qualifiers are ignored.
 
-* Returns reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
+* Returns a reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
 * Returns compiler-specific type name.
 
 * In all cases, reference and cv-qualifiers are ignored.
 
-* If type does not have name, occurs the compilation error `"Type does not have a name."`.
+* If the type does not have a name, compilation fails with `"Type does not have a name."`.
 
 * Examples
 
@@ -323,19 +322,19 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17</br>
-  Visual Studio >= 2017 and C++ >= 17</br>
-  GCC >= 7 and C++ >= 17</br>
+  Clang/LLVM >= 5 and C++ >= 17<br>
+  Visual Studio >= 2017 and C++ >= 17<br>
+  GCC >= 7 and C++ >= 17<br>
 
 ## `NAMEOF_FULL_TYPE_EXPR`
 
 * Obtains full type name of expression, with reference and cv-qualifiers.
 
-* Returns reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
+* Returns a reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
 * Returns compiler-specific type name.
 
-* If type does not have name, occurs the compilation error `"Type does not have a name."`.
+* If the type does not have a name, compilation fails with `"Type does not have a name."`.
 
 * Examples
 
@@ -347,19 +346,19 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17</br>
-  Visual Studio >= 2017 and C++ >= 17</br>
-  GCC >= 7 and C++ >= 17</br>
+  Clang/LLVM >= 5 and C++ >= 17<br>
+  Visual Studio >= 2017 and C++ >= 17<br>
+  GCC >= 7 and C++ >= 17<br>
 
 ## `NAMEOF_SHORT_TYPE_EXPR`
 
 * Obtains short type name of expression.
 
-* Returns reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
+* Returns a reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
 * Returns compiler-specific type name.
 
-* If type does not have name, occurs the compilation error `"Type does not have a name."`.
+* If the type does not have a name, compilation fails with `"Type does not have a name."`.
 
 * Examples
 
@@ -370,9 +369,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17</br>
-  Visual Studio >= 2017 and C++ >= 17</br>
-  GCC >= 7 and C++ >= 17</br>
+  Clang/LLVM >= 5 and C++ >= 17<br>
+  Visual Studio >= 2017 and C++ >= 17<br>
+  GCC >= 7 and C++ >= 17<br>
 
 ## `NAMEOF_TYPE_RTTI`
 
@@ -388,9 +387,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled</br>
-  Visual Studio >= 2017 and C++ >= 17 and RTTI enabled</br>
-  GCC >= 7 and C++ >= 17 and RTTI enabled</br>
+  Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled<br>
+  Visual Studio >= 2017 and C++ >= 17 and RTTI enabled<br>
+  GCC >= 7 and C++ >= 17 and RTTI enabled<br>
 
 ## `NAMEOF_FULL_TYPE_RTTI`
 
@@ -407,9 +406,9 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled</br>
-  Visual Studio >= 2017 and C++ >= 17 and RTTI enabled</br>
-  GCC >= 7 and C++ >= 17 and RTTI enabled</br>
+  Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled<br>
+  Visual Studio >= 2017 and C++ >= 17 and RTTI enabled<br>
+  GCC >= 7 and C++ >= 17 and RTTI enabled<br>
 
 ## `NAMEOF_SHORT_TYPE_RTTI`
 
@@ -425,15 +424,15 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled</br>
-  Visual Studio >= 2017 and C++ >= 17 and RTTI enabled</br>
-  GCC >= 7 and C++ >= 17 and RTTI enabled</br>
+  Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled<br>
+  Visual Studio >= 2017 and C++ >= 17 and RTTI enabled<br>
+  GCC >= 7 and C++ >= 17 and RTTI enabled<br>
 
 ## `NAMEOF_MEMBER`
 
 * Obtains name of member.
 
-* Returns reference to `nameof::cstring`, a constexpr null-terminated string type.
+* Returns a reference to `nameof::cstring`, a constexpr null-terminated string type.
 
 * Examples
 
@@ -447,15 +446,15 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17</br>
-  Visual Studio >= 2022 and C++ >= 20</br>
-  GCC >= 7 and C++ >= 17</br>
+  Clang/LLVM >= 5 and C++ >= 17<br>
+  Visual Studio >= 2022 and C++ >= 20<br>
+  GCC >= 7 and C++ >= 17<br>
 
 ## `NAMEOF_POINTER`
 
 * Obtains name of a function, a global or class static variable.
 
-* Returns reference to `nameof::cstring`, a constexpr null-terminated string type.
+* Returns a reference to `nameof::cstring`, a constexpr null-terminated string type.
 
 * Examples
   ```cpp
@@ -471,6 +470,6 @@
   ```
 
 * Compiler compatibility
-  Clang/LLVM >= 5 and C++ >= 17</br>
-  Visual Studio >= 2022 and C++ >= 20</br>
-  GCC >= 7 and C++ >= 17</br>
+  Clang/LLVM >= 5 and C++ >= 17<br>
+  Visual Studio >= 2022 and C++ >= 20<br>
+  GCC >= 7 and C++ >= 17<br>

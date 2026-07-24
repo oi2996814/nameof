@@ -2,7 +2,7 @@
 
 ## Nameof
 
-* If the argument does not have a name, the compilation error `"Expression does not have a name."` occurs.
+* If the argument does not have a name, compilation fails with `"Expression does not have a name."`.
 
 ## Nameof Type
 
@@ -10,24 +10,24 @@
 
 * nameof_type and nameof_type_rtti return a compiler-specific type name.
 
-* To check if nameof_type is supported by your compiler use the macro `NAMEOF_TYPE_SUPPORTED` or constexpr constant `nameof::is_nameof_type_supported`.</br>
-  If nameof_type is used on an unsupported compiler, a compilation error occurs. To suppress the error define the macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
+* To check whether nameof_type is supported by your compiler, use the macro `NAMEOF_TYPE_SUPPORTED` or the constexpr constant `nameof::is_nameof_type_supported`.<br>
+  If nameof_type is used on an unsupported compiler, a compilation error occurs. To suppress the check, define the macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
 
-* To check if nameof_type_rtti is supported by your compiler use macro `NAMEOF_TYPE_RTTI_SUPPORTED` or constexpr constant `nameof::is_nameof_type_rtti_supported`.</br>
-  If nameof_type_rtti is used on an unsupported compiler, a compilation error occurs. To suppress the error define the macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
+* To check whether nameof_type_rtti is supported by your compiler, use the macro `NAMEOF_TYPE_RTTI_SUPPORTED` or the constexpr constant `nameof::is_nameof_type_rtti_supported`.<br>
+  If nameof_type_rtti is used on an unsupported compiler, a compilation error occurs. To suppress the check, define the macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
 
-* To check is nameof_member supported compiler use macro `NAMEOF_MEMBER_SUPPORTED` or constexpr constant `nameof::is_nameof_member_supported`.</br>
-  If nameof_member used on unsupported compiler, occurs the compilation error. To suppress error define macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
+* To check whether nameof_member is supported by your compiler, use the macro `NAMEOF_MEMBER_SUPPORTED` or the constexpr constant `nameof::is_nameof_member_supported`.<br>
+  If nameof_member is used on an unsupported compiler, a compilation error occurs. To suppress the check, define the macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
 
-* To check is nameof_pointer supported compiler use macro `NAMEOF_POINTER_SUPPORTED` or constexpr constant `nameof::is_nameof_pointer_supported`.</br>
-  If nameof_pointer used on unsupported compiler, occurs the compilation error. To suppress error define macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
+* To check whether nameof_pointer is supported by your compiler, use the macro `NAMEOF_POINTER_SUPPORTED` or the constexpr constant `nameof::is_nameof_pointer_supported`.<br>
+  If nameof_pointer is used on an unsupported compiler, a compilation error occurs. To suppress the check, define the macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
 
 ## Nameof Enum
 
 * This library uses a compiler-specific hack (based on `__PRETTY_FUNCTION__` / `__FUNCSIG__`), which works on Clang >= 5, MSVC >= 15.3 and GCC >= 9.
 
-* To check if nameof_enum is supported by your compiler use the macro `NAMEOF_ENUM_SUPPORTED` or constexpr constant `nameof::is_nameof_enum_supported`.</br>
-  If nameof_enum is used on an unsupported compiler, a compilation error occurs. To suppress the error define the macro `NAMEOF_ENUM_NO_CHECK_SUPPORT`.
+* To check whether nameof_enum is supported by your compiler, use the macro `NAMEOF_ENUM_SUPPORTED` or the constexpr constant `nameof::is_nameof_enum_supported`.<br>
+  If nameof_enum is used on an unsupported compiler, a compilation error occurs. To suppress the check, define the macro `NAMEOF_ENUM_NO_CHECK_SUPPORT`.
 
 * Runtime reflection of ordinary enum values is limited to `[NAMEOF_ENUM_RANGE_MIN, NAMEOF_ENUM_RANGE_MAX]`. `NAMEOF_ENUM_CONST`, `nameof::nameof_enum<V>()`, `NAMEOF_ENUM_FLAG`, and `nameof::nameof_enum_flag()` are not restricted by this range.
 

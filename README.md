@@ -86,7 +86,7 @@ If you like this project, please consider donating to one of the funds that help
 
   using T = const my::detail::SomeClass<int>&;
   // Name of type.
-  NAMEOF_TYPE(T) ->"my::detail::SomeClass<int>"
+  NAMEOF_TYPE(T) -> "my::detail::SomeClass<int>"
   nameof::nameof_type<T>() -> "my::detail::SomeClass<int>"
   NAMEOF_FULL_TYPE(T) -> "const my::detail::SomeClass<int>&"
   nameof::nameof_full_type<T>() -> "const my::detail::SomeClass<int>&"
@@ -119,7 +119,7 @@ If you like this project, please consider donating to one of the funds that help
 
 ## Remarks
 
-* Before use, read the [limitations](doc/limitations.md) of functionality.
+* Before use, read the [limitations](doc/limitations.md).
 
 ## Integration
 
