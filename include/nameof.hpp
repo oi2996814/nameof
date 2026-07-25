@@ -122,13 +122,13 @@
 #  define NAMEOF_ENUM_SUPPORTED_ALIASES 1
 #endif
 
-// Enum value must be greater than or equal to NAMEOF_ENUM_RANGE_MIN. By default NAMEOF_ENUM_RANGE_MIN = -128.
+// Enum value must be greater than or equal to NAMEOF_ENUM_RANGE_MIN. By default, NAMEOF_ENUM_RANGE_MIN = -128.
 // If you need another default minimum for all enum types, redefine the macro NAMEOF_ENUM_RANGE_MIN.
 #if !defined(NAMEOF_ENUM_RANGE_MIN)
 #  define NAMEOF_ENUM_RANGE_MIN -128
 #endif
 
-// Enum value must be less than or equal to NAMEOF_ENUM_RANGE_MAX. By default NAMEOF_ENUM_RANGE_MAX = 127.
+// Enum value must be less than or equal to NAMEOF_ENUM_RANGE_MAX. By default, NAMEOF_ENUM_RANGE_MAX = 127.
 // If you need another default maximum for all enum types, redefine the macro NAMEOF_ENUM_RANGE_MAX.
 #if !defined(NAMEOF_ENUM_RANGE_MAX)
 #  define NAMEOF_ENUM_RANGE_MAX 127
@@ -152,7 +152,7 @@ using std::string;
 
 namespace customize {
 
-// Enum value must be in range [NAMEOF_ENUM_RANGE_MIN, NAMEOF_ENUM_RANGE_MAX]. By default NAMEOF_ENUM_RANGE_MIN = -128, NAMEOF_ENUM_RANGE_MAX = 127.
+// Enum value must be in range [NAMEOF_ENUM_RANGE_MIN, NAMEOF_ENUM_RANGE_MAX]. By default, NAMEOF_ENUM_RANGE_MIN = -128, NAMEOF_ENUM_RANGE_MAX = 127.
 // If you need another range for all enum types by default, redefine the macro NAMEOF_ENUM_RANGE_MIN and NAMEOF_ENUM_RANGE_MAX.
 // If you need another range for a specific enum type, specialize enum_range for that type.
 template <typename E>
@@ -1160,7 +1160,7 @@ inline constexpr bool is_nameof_pointer_supported = detail::nameof_pointer_suppo
 // Checks whether nameof_enum is supported by the compiler.
 inline constexpr bool is_nameof_enum_supported = detail::nameof_enum_supported<void>::value;
 
-// Obtains name of enum variable.
+// Obtains name of enum value.
 template <typename E>
 [[nodiscard]] constexpr auto nameof_enum(E value) noexcept -> detail::enable_if_enum_t<E, string_view> {
   using D = std::decay_t<E>;
@@ -1227,7 +1227,7 @@ template <typename E>
   return {}; // Invalid value.
 }
 
-// Obtains name of an enum value known at compile time.
+// Obtains name of enum value known at compile time.
 // This version has a lower compile-time cost and is not restricted by the enum_range limitation.
 template <auto V, detail::enable_if_enum_t<decltype(V), int> = 0>
 [[nodiscard]] constexpr const auto& nameof_enum() noexcept {
@@ -1237,7 +1237,7 @@ template <auto V, detail::enable_if_enum_t<decltype(V), int> = 0>
   return detail::enum_name_v<D, V>;
 }
 
-// Obtains name of type, reference and cv-qualifiers are ignored.
+// Obtains type name; reference and cv-qualifiers are ignored.
 template <typename T>
 [[nodiscard]] constexpr const auto& nameof_type() noexcept {
   using U = detail::identity<detail::remove_cvref_t<T>>;
@@ -1245,7 +1245,7 @@ template <typename T>
   return detail::type_name_v<U>;
 }
 
-// Obtains full name of type, with reference and cv-qualifiers.
+// Obtains full type name with reference and cv-qualifiers.
 template <typename T>
 [[nodiscard]] constexpr const auto& nameof_full_type() noexcept {
   using U = detail::identity<T>;
@@ -1253,7 +1253,7 @@ template <typename T>
   return detail::type_name_v<U>;
 }
 
-// Obtains short name of type.
+// Obtains short type name.
 template <typename T, detail::enable_if_has_short_name_t<T, int> = 0>
 [[nodiscard]] constexpr const auto& nameof_short_type() noexcept {
   using U = detail::identity<detail::remove_cvref_t<T>>;
@@ -1324,7 +1324,7 @@ struct fmt::formatter<nameof::cstring<N>> : fmt::formatter<fmt::string_view> {
   constexpr auto _nameof_full = ::nameof::cstring<_size>{_name};             \
   return _nameof_full; }()
 
-// Obtains raw name of variable, function, macro.
+// Obtains raw expression text.
 #define NAMEOF_RAW(...) []() constexpr noexcept {                    \
   ::std::void_t<decltype(__VA_ARGS__)>();                            \
   constexpr auto _name = ::nameof::string_view{#__VA_ARGS__};        \
@@ -1333,44 +1333,44 @@ struct fmt::formatter<nameof::cstring<N>> : fmt::formatter<fmt::string_view> {
   constexpr auto _nameof_raw = ::nameof::cstring<_size>{_name};      \
   return _nameof_raw; }()
 
-// Obtains name of enum variable.
+// Obtains name of enum value.
 #define NAMEOF_ENUM(...) ::nameof::nameof_enum<::std::decay_t<decltype(__VA_ARGS__)>>(__VA_ARGS__)
 
 // Obtains name of enum value or default value if no name is available.
 #define NAMEOF_ENUM_OR(...) ::nameof::nameof_enum_or(__VA_ARGS__)
 
-// Obtains name of an enum value known at compile time.
+// Obtains name of enum value known at compile time.
 // This version has a lower compile-time cost and is not restricted by the enum_range limitation.
 #define NAMEOF_ENUM_CONST(...) ::nameof::nameof_enum<__VA_ARGS__>()
 
 // Obtains name of enum flag value.
 #define NAMEOF_ENUM_FLAG(...) ::nameof::nameof_enum_flag<::std::decay_t<decltype(__VA_ARGS__)>>(__VA_ARGS__)
 
-// Obtains type name, reference and cv-qualifiers are ignored.
+// Obtains type name; reference and cv-qualifiers are ignored.
 #define NAMEOF_TYPE(...) ::nameof::nameof_type<__VA_ARGS__>()
 
-// Obtains full type name, with reference and cv-qualifiers.
+// Obtains full type name with reference and cv-qualifiers.
 #define NAMEOF_FULL_TYPE(...) ::nameof::nameof_full_type<__VA_ARGS__>()
 
 // Obtains short type name.
 #define NAMEOF_SHORT_TYPE(...) ::nameof::nameof_short_type<__VA_ARGS__>()
 
-// Obtains type name of expression, reference and cv-qualifiers are ignored.
+// Obtains type name of expression; reference and cv-qualifiers are ignored.
 #define NAMEOF_TYPE_EXPR(...) ::nameof::nameof_type<decltype(__VA_ARGS__)>()
 
-// Obtains full type name of expression, with reference and cv-qualifiers.
+// Obtains full type name of expression with reference and cv-qualifiers.
 #define NAMEOF_FULL_TYPE_EXPR(...) ::nameof::nameof_full_type<decltype(__VA_ARGS__)>()
 
 // Obtains short type name of expression.
 #define NAMEOF_SHORT_TYPE_EXPR(...) ::nameof::nameof_short_type<decltype(__VA_ARGS__)>()
 
-// Obtains type name, with reference and cv-qualifiers, using RTTI.
+// Obtains type name using RTTI.
 #define NAMEOF_TYPE_RTTI(...) ::nameof::detail::nameof_type_rtti<::std::void_t<decltype(__VA_ARGS__)>>(typeid(__VA_ARGS__).name())
 
-// Obtains full type name, using RTTI.
+// Obtains full type name using RTTI.
 #define NAMEOF_FULL_TYPE_RTTI(...) ::nameof::detail::nameof_full_type_rtti<decltype(__VA_ARGS__)>(typeid(__VA_ARGS__).name())
 
-// Obtains short type name, using RTTI.
+// Obtains short type name using RTTI.
 #define NAMEOF_SHORT_TYPE_RTTI(...) ::nameof::detail::nameof_short_type_rtti<decltype(__VA_ARGS__)>(typeid(__VA_ARGS__).name())
 
 // Obtains name of member.

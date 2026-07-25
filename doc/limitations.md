@@ -2,13 +2,17 @@
 
 ## Nameof
 
-* If the argument does not have a name, compilation fails with the following diagnostic: `"Expression does not have a name."`
+* If argument to `NAMEOF` or `NAMEOF_FULL` has no name, compilation fails: `"Expression does not have a name."` `NAMEOF_RAW` returns raw expression text for any valid expression.
 
 ## Nameof Type
 
 * This library uses a compiler-specific hack (based on `__PRETTY_FUNCTION__` / `__FUNCSIG__`).
 
-* `nameof::nameof_type<T>()` and `NAMEOF_TYPE_RTTI` return compiler-specific type names.
+* Type-name results are compiler-specific unless customized.
+
+* `nameof::nameof_short_type<T>()`, `NAMEOF_SHORT_TYPE`, `NAMEOF_SHORT_TYPE_EXPR`, and `NAMEOF_SHORT_TYPE_RTTI` do not accept array or pointer types.
+
+* RTTI-based APIs follow `typeid` rules: the dynamic type is reported only for polymorphic glvalues.
 
 * To check whether nameof_type is supported by your compiler, use the macro `NAMEOF_TYPE_SUPPORTED` or the constexpr constant `nameof::is_nameof_type_supported`.<br>
   If nameof_type is used on an unsupported compiler, a compilation error occurs. To suppress the check, define the macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
@@ -31,7 +35,9 @@
 
 * Runtime reflection of ordinary enum values is limited to `[NAMEOF_ENUM_RANGE_MIN, NAMEOF_ENUM_RANGE_MAX]`. `NAMEOF_ENUM_CONST`, `nameof::nameof_enum<V>()`, `NAMEOF_ENUM_FLAG`, and `nameof::nameof_enum_flag()` are not restricted by this range.
 
-  * By default `NAMEOF_ENUM_RANGE_MIN = -128`, `NAMEOF_ENUM_RANGE_MAX = 127`.
+  * By default, `NAMEOF_ENUM_RANGE_MIN = -128`, `NAMEOF_ENUM_RANGE_MAX = 127`.
+
+  * The effective range is also clamped to the limits of the enum's underlying type.
 
   * `NAMEOF_ENUM_RANGE_MIN` must be less than or equal to `0` and must be greater than `INT16_MIN`.
 

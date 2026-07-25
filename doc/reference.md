@@ -2,20 +2,20 @@
 
 * [`NAMEOF` obtains simple name of variable, function, macro.](#nameof)
 * [`NAMEOF_FULL` obtains full name of variable, function, macro.](#nameof_full)
-* [`NAMEOF_RAW` obtains raw name of variable, function, macro.](#nameof_raw)
-* [`NAMEOF_ENUM` obtains name of enum variable.](#nameof_enum)
-* [`NAMEOF_ENUM_OR` obtains the name of an enum value, or a default value if no name is available.](#nameof_enum_or)
-* [`NAMEOF_ENUM_CONST` obtains the name of an enum value at compile time.](#nameof_enum_const)
-* [`NAMEOF_ENUM_FLAG` obtains the name of an enum flag value.](#nameof_enum_flag)
+* [`NAMEOF_RAW` obtains raw expression text.](#nameof_raw)
+* [`NAMEOF_ENUM` obtains name of enum value.](#nameof_enum)
+* [`NAMEOF_ENUM_OR` obtains name of enum value or default value if no name is available.](#nameof_enum_or)
+* [`NAMEOF_ENUM_CONST` obtains name of enum value at compile time.](#nameof_enum_const)
+* [`NAMEOF_ENUM_FLAG` obtains name of enum flag value.](#nameof_enum_flag)
 * [`NAMEOF_TYPE` obtains type name.](#nameof_type)
 * [`NAMEOF_FULL_TYPE` obtains full type name.](#nameof_full_type)
 * [`NAMEOF_SHORT_TYPE` obtains short type name.](#nameof_short_type)
 * [`NAMEOF_TYPE_EXPR` obtains type name of expression.](#nameof_type_expr)
 * [`NAMEOF_FULL_TYPE_EXPR` obtains full type name of expression.](#nameof_full_type_expr)
 * [`NAMEOF_SHORT_TYPE_EXPR` obtains short type name of expression.](#nameof_short_type_expr)
-* [`NAMEOF_TYPE_RTTI` obtains type name, using RTTI.](#nameof_type_rtti)
-* [`NAMEOF_FULL_TYPE_RTTI` obtains full type name, using RTTI.](#nameof_full_type_rtti)
-* [`NAMEOF_SHORT_TYPE_RTTI` obtains short type name, using RTTI.](#nameof_short_type_rtti)
+* [`NAMEOF_TYPE_RTTI` obtains type name using RTTI.](#nameof_type_rtti)
+* [`NAMEOF_FULL_TYPE_RTTI` obtains full type name using RTTI.](#nameof_full_type_rtti)
+* [`NAMEOF_SHORT_TYPE_RTTI` obtains short type name using RTTI.](#nameof_short_type_rtti)
 * [`NAMEOF_MEMBER` obtains name of member.](#nameof_member)
 * [`NAMEOF_POINTER` obtains name of a function, a global or class static variable.](#nameof_pointer)
 
@@ -38,9 +38,9 @@
 * To check whether nameof_pointer is supported by your compiler, use the macro `NAMEOF_POINTER_SUPPORTED` or the constexpr constant `nameof::is_nameof_pointer_supported`.<br>
   If nameof_pointer is used on an unsupported compiler, a compilation error occurs. To suppress the check, define the macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
 
-* To add custom enum or type names see the [example](../example/example_custom_name.cpp).
+* To customize a name, specialize the corresponding function in `namespace nameof::customize`: `enum_name`, `type_name`, `member_name`, or `pointer_name`. See the [enum and type example](../example/example_custom_name.cpp).
 
-* To change the type of strings, use special macros:
+* To change the string types, use these macros:
 
   ```cpp
   #include <my_lib/string.hpp>
@@ -52,7 +52,9 @@
 
   The aliases must provide the subset of `std::string` and `std::string_view` operations used by nameof. See the tested [minimal interface](../test/test_aliases.cpp).
 
-* `std::format` support for `nameof::cstring` is enabled automatically when `<format>` is available. For `fmt`, include `fmt/format.h` before `nameof.hpp`.
+* `std::format` support for `nameof::cstring` is enabled when the standard library supports it. For `fmt`, include `<fmt/format.h>` before `<nameof.hpp>`.
+
+* RTTI-based APIs follow `typeid` rules: the dynamic type is reported only for polymorphic glvalues.
 
 ## `NAMEOF`
 
@@ -60,27 +62,27 @@
 
 * Returns `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
-* If the argument does not have a name, compilation fails with the following diagnostic: `"Expression does not have a name."`
+* If argument has no name, compilation fails: `"Expression does not have a name."`
 
 * Examples
 
-    ```cpp
-    // Name of variable.
-    NAMEOF(somevar) -> "somevar"
+  ```cpp
+  // Name of variable.
+  NAMEOF(somevar) -> "somevar"
 
-    // Name of member variable.
-    NAMEOF(person.address.zip_code) -> "zip_code"
+  // Name of member variable.
+  NAMEOF(person.address.zip_code) -> "zip_code"
 
-    // Name of function.
-    NAMEOF(foo<int, float>()) -> "foo"
+  // Name of function.
+  NAMEOF(foo<int, float>()) -> "foo"
 
-    // Name of member function.
-    NAMEOF(somevar.some_method()) -> "some_method"
-    NAMEOF(somevar.some_method<int>()) -> "some_method"
+  // Name of member function.
+  NAMEOF(somevar.some_method()) -> "some_method"
+  NAMEOF(somevar.some_method<int>()) -> "some_method"
 
-    // Name of macro.
-    NAMEOF(__LINE__) -> "__LINE__"
-    ```
+  // Name of macro.
+  NAMEOF(__LINE__) -> "__LINE__"
+  ```
 
 * Compiler compatibility
   * Clang/LLVM >= 5 and C++ >= 17
@@ -93,7 +95,7 @@
 
 * Returns `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
-* If the argument does not have a name, compilation fails with the following diagnostic: `"Expression does not have a name."`
+* If argument has no name, compilation fails: `"Expression does not have a name."`
 
 * Examples
 
@@ -112,11 +114,9 @@
 
 ## `NAMEOF_RAW`
 
-* Obtains raw name of variable, function, macro.
+* Obtains raw expression text.
 
 * Returns `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
-
-* If the argument does not have a name, compilation fails with the following diagnostic: `"Expression does not have a name."`
 
 * Examples
 
@@ -132,13 +132,13 @@
 
 ## `NAMEOF_ENUM`
 
-* Obtains name of enum variable.
+* Obtains name of enum value.
 
 * Returns `string_view`. Marked `constexpr` and `noexcept`.
 
-* If the enum type has no reflected values in the configured [range](limitations.md#nameof-enum), a compilation error occurs.
+* If enum type has no reflected values in configured [range](limitations.md#nameof-enum), compilation fails.
 
-* Otherwise, returns an empty `string_view` if the argument does not have a name or is out of range.
+* If value has no name or is [out of range](limitations.md#nameof-enum), returns empty `string_view`.
 
 * Examples
 
@@ -155,11 +155,13 @@
 
 ## `NAMEOF_ENUM_OR`
 
-* Obtains the name of an enum value, or a default value if no name is available.
+* Obtains name of enum value or default value if no name is available.
 
 * Returns `string`.
 
-* If the value has no name, returns `default_value`.
+* If value has no name or is [out of range](limitations.md#nameof-enum), returns `default_value`.
+
+* Examples
 
   ```cpp
   auto color = Color::RED;
@@ -176,13 +178,13 @@
 
 ## `NAMEOF_ENUM_CONST`
 
-* Obtains the name of an enum value known at compile time.
+* Obtains name of enum value known at compile time.
 
 * Returns a reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
 * This version has a lower compile-time cost and is not restricted by the [`enum_range`](limitations.md#nameof-enum).
 
-* If the value has no name, returns an empty `nameof::cstring`.
+* If value has no name, returns empty `nameof::cstring`.
 
 * Examples
 
@@ -198,13 +200,13 @@
 
 ## `NAMEOF_ENUM_FLAG`
 
-* Obtains the name of an enum flag value.
+* Obtains name of enum flag value.
 
 * Returns `string`.
 
-* At least one named single-bit enumerator is required; otherwise a compilation error occurs. Composite enumerator names are not used.
+* At least one named single-bit enumerator is required; otherwise, compilation fails. Composite enumerator names are not used.
 
-* If the value is zero or contains an unnamed bit, returns an empty `string`.
+* If value is zero or contains unnamed bit, returns empty `string`.
 
 * Examples
 
@@ -231,15 +233,13 @@
 
 ## `NAMEOF_TYPE`
 
-* Obtains type name, reference and cv-qualifiers are ignored.
+* Obtains type name; reference and cv-qualifiers are ignored (`NAMEOF_TYPE(const T&) == NAMEOF_TYPE(T)`).
 
 * Returns a reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
-* In all cases, reference and cv-qualifiers are ignored by `NAMEOF_TYPE` (that is, `NAMEOF_TYPE(const T&) == NAMEOF_TYPE(T)`).
-
 * Returns compiler-specific type name.
 
-* If the type does not have a name, compilation fails with the following diagnostic: `"Type does not have a name."`
+* If type has no name, compilation fails: `"Type does not have a name."`
 
 * Examples
 
@@ -256,13 +256,13 @@
 
 ## `NAMEOF_FULL_TYPE`
 
-* Obtains full type name, with reference and cv-qualifiers.
+* Obtains full type name with reference and cv-qualifiers.
 
 * Returns a reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
 * Returns compiler-specific type name.
 
-* If the type does not have a name, compilation fails with the following diagnostic: `"Type does not have a name."`
+* If type has no name, compilation fails: `"Type does not have a name."`
 
 * Examples
 
@@ -285,7 +285,9 @@
 
 * Returns compiler-specific type name.
 
-* If the type does not have a name, compilation fails with the following diagnostic: `"Type does not have a name."`
+* Array and pointer types are not supported.
+
+* If type has no name, compilation fails: `"Type does not have a name."`
 
 * Examples
 
@@ -302,15 +304,13 @@
 
 ## `NAMEOF_TYPE_EXPR`
 
-* Obtains type name of expression, reference and cv-qualifiers are ignored.
+* Obtains type name of expression; reference and cv-qualifiers are ignored.
 
 * Returns a reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
 * Returns compiler-specific type name.
 
-* In all cases, reference and cv-qualifiers are ignored.
-
-* If the type does not have a name, compilation fails with the following diagnostic: `"Type does not have a name."`
+* If type has no name, compilation fails: `"Type does not have a name."`
 
 * Examples
 
@@ -328,13 +328,13 @@
 
 ## `NAMEOF_FULL_TYPE_EXPR`
 
-* Obtains full type name of expression, with reference and cv-qualifiers.
+* Obtains full type name of expression with reference and cv-qualifiers.
 
 * Returns a reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
 * Returns compiler-specific type name.
 
-* If the type does not have a name, compilation fails with the following diagnostic: `"Type does not have a name."`
+* If type has no name, compilation fails: `"Type does not have a name."`
 
 * Examples
 
@@ -358,7 +358,9 @@
 
 * Returns compiler-specific type name.
 
-* If the type does not have a name, compilation fails with the following diagnostic: `"Type does not have a name."`
+* Array and pointer types are not supported.
+
+* If type has no name, compilation fails: `"Type does not have a name."`
 
 * Examples
 
@@ -375,7 +377,7 @@
 
 ## `NAMEOF_TYPE_RTTI`
 
-* Obtains type name, using RTTI.
+* Obtains type name using RTTI.
 
 * Returns `string`.
 
@@ -393,7 +395,7 @@
 
 ## `NAMEOF_FULL_TYPE_RTTI`
 
-* Obtains full type name, using RTTI.
+* Obtains full type name using RTTI.
 
 * Returns `string`.
 
@@ -412,9 +414,11 @@
 
 ## `NAMEOF_SHORT_TYPE_RTTI`
 
-* Obtains short type name, using RTTI.
+* Obtains short type name using RTTI.
 
 * Returns `string`.
+
+* Array and pointer types are not supported.
 
 * Examples
 
@@ -434,13 +438,15 @@
 
 * Returns a reference to `nameof::cstring`, a constexpr null-terminated string type.
 
+* On Visual Studio, the containing class must be fully defined before use.
+
 * Examples
 
   ```cpp
   struct A {
     int this_is_the_name;
   };
-  // ..
+  // ...
   NAMEOF_MEMBER(&A::this_is_the_name) -> "this_is_the_name"
   nameof::nameof_member<&A::this_is_the_name>() -> "this_is_the_name"
   ```
@@ -456,17 +462,20 @@
 
 * Returns a reference to `nameof::cstring`, a constexpr null-terminated string type.
 
+* If pointer is null, returns `"nullptr"` by default.
+
 * Examples
+
   ```cpp
   int someglobalvariable = 0;
   const int someglobalconstvariable = 42;
-  // ..
-  NAMEOF_POINTER(&someglobalconstvariable) == "someglobalconstvariable"
-  nameof::nameof_pointer<&someglobalconstvariable>() == "someglobalconstvariable"
+  // ...
+  NAMEOF_POINTER(&someglobalconstvariable) -> "someglobalconstvariable"
+  nameof::nameof_pointer<&someglobalconstvariable>() -> "someglobalconstvariable"
 
   constexpr auto global_ptr = &someglobalvariable;
-  NAMEOF_POINTER(global_ptr) == "someglobalvariable"
-  nameof::nameof_pointer<global_ptr>() == "someglobalvariable"
+  NAMEOF_POINTER(global_ptr) -> "someglobalvariable"
+  nameof::nameof_pointer<global_ptr>() -> "someglobalvariable"
   ```
 
 * Compiler compatibility

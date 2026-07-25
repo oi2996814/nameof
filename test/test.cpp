@@ -55,7 +55,7 @@ struct SomeStruct {
 
   void SomeMethod1(int) {
     throw std::runtime_error{"should not be called!"};
-   }
+  }
 
   int SomeMethod2() const {
     throw std::runtime_error{"should not be called!"};
@@ -85,7 +85,7 @@ std::string SomeMethod4(U) {
 
 template <typename T>
 class SomeClass {
-public:
+ public:
   void SomeMethod5() const {
     throw std::runtime_error{"should not be called!"};
   }

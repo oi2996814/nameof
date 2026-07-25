@@ -15,7 +15,7 @@ If you like this project, please consider donating to one of the funds that help
 
 * [Reference](doc/reference.md)
 * [Limitations](doc/limitations.md)
-* [Integration](#Integration)
+* [Integration](#integration)
 
 ## [Features & Examples](example/example.cpp)
 
@@ -41,7 +41,7 @@ If you like this project, please consider donating to one of the funds that help
   // Obtains full name of variable, function, macro.
   NAMEOF_FULL(somevar.some_method<int>()) -> "some_method<int>"
 
-  // Obtains raw name of variable, function, macro.
+  // Obtains raw expression text.
   NAMEOF_RAW(somevar.some_method<int>()) -> "somevar.some_method<int>()"
   ```
 
@@ -51,11 +51,11 @@ If you like this project, please consider donating to one of the funds that help
   enum class Color { RED = 1, BLUE = 2, GREEN = 4 };
 
   auto color = Color::RED;
-  // Name of enum variable.
+  // Name of enum value.
   NAMEOF_ENUM(color) -> "RED"
   nameof::nameof_enum(color) -> "RED"
 
-  // Name of an enum value known at compile time.
+  // Name of enum value known at compile time.
   // This version has a lower compile-time cost and is not restricted by the enum_range limitation.
   NAMEOF_ENUM_CONST(Color::GREEN) -> "GREEN"
   nameof::nameof_enum<Color::GREEN>() -> "GREEN"
@@ -67,12 +67,14 @@ If you like this project, please consider donating to one of the funds that help
   NAMEOF_ENUM_FLAG(flag) -> "CanFly|EatsFish"
   nameof::nameof_enum_flag(flag) -> "CanFly|EatsFish"
 
-  // Obtains the name of an enum value, or the default value if no name is available.
+  // Obtains name of enum value or default value if no name is available.
   NAMEOF_ENUM_OR(Color::GREEN, "none") -> "GREEN"
   NAMEOF_ENUM_OR((Color)0, "none") -> "none"
   ```
 
 * **Nameof type**
+
+  Exact type spellings are compiler-specific.
 
   ```cpp
   const my::detail::SomeClass<int>& var_ref = var;
@@ -94,7 +96,7 @@ If you like this project, please consider donating to one of the funds that help
   nameof::nameof_short_type<T>() -> "SomeClass"
 
   my::detail::Base* ptr = new my::detail::Derived();
-  // Name of type, using rtti.
+  // Obtains type name using RTTI.
   NAMEOF_TYPE_RTTI(*ptr) -> "my::detail::Derived"
   NAMEOF_FULL_TYPE_RTTI(*ptr) -> "my::detail::Derived&"
   NAMEOF_SHORT_TYPE_RTTI(*ptr) -> "Derived"
@@ -109,12 +111,12 @@ If you like this project, please consider donating to one of the funds that help
   int someglobalvariable = 0;
   const int someglobalconstvariable = 42;
   // Obtains name of a function, a global or class static variable.
-  NAMEOF_POINTER(&someglobalconstvariable) == "someglobalconstvariable"
-  nameof::nameof_pointer<&someglobalconstvariable>() == "someglobalconstvariable"
+  NAMEOF_POINTER(&someglobalconstvariable) -> "someglobalconstvariable"
+  nameof::nameof_pointer<&someglobalconstvariable>() -> "someglobalconstvariable"
 
   constexpr auto global_ptr = &someglobalvariable;
-  NAMEOF_POINTER(global_ptr) == "someglobalvariable"
-  nameof::nameof_pointer<global_ptr>() == "someglobalvariable"
+  NAMEOF_POINTER(global_ptr) -> "someglobalvariable"
+  nameof::nameof_pointer<global_ptr>() -> "someglobalvariable"
   ```
 
 ## Remarks
@@ -138,13 +140,13 @@ If you use [Conan](https://www.conan.io/) to manage your dependencies, add `name
 
 Arch Linux users can install `nameof` from the AUR with an AUR helper such as `yay`: `yay -S nameof`.
 
-Alternatively, use [CPM](https://github.com/TheLartians/CPM), which is based on CMake's `FetchContent` module.
+Alternatively, use [CPM](https://github.com/cpm-cmake/CPM.cmake), which is based on CMake's `FetchContent` module.
 
 ```cmake
 CPMAddPackage(
     NAME nameof
     GITHUB_REPOSITORY Neargye/nameof
-    GIT_TAG x.y.z # Where `x.y.z` is the release version you want to use.
+    GIT_TAG vx.y.z # Replace `x.y.z` with the release version you want to use.
 )
 ```
 

@@ -109,19 +109,19 @@ int main() {
 
   name_to_chars(name.c_str()); // 'structvar'
   // or name_to_chars(name.data());
-  // Note: c_str() return name as null-terminated C string, no memory allocation.
+  // Note: c_str() returns a null-terminated C string without allocation.
 
   name_to_string(name.str()); // 'structvar'
-  // Note: str() occure memory allocation to copy name to std::string.
+  // Note: str() creates a std::string copy.
   // or name_to_string(std::string{name});
   // or name_to_string(static_cast<std::string>(name));
-  // Note: cast to std::string occure memory allocation to copy name to std::string.
+  // Note: Casting to std::string creates a copy.
 
   name_to_string_view(name); // 'structvar'
-  // Note: Implicit cast to std::string_view, no memory allocation.
+  // Note: Implicit conversion to std::string_view does not allocate.
 
 #if defined(NAMEOF_ENUM_SUPPORTED)
-  // Nameof enum variable.
+  // Nameof enum value.
   auto color = Color::RED;
   std::cout << nameof::nameof_enum(color) << std::endl; // 'RED'
   std::cout << NAMEOF_ENUM(color) << std::endl; // 'RED'
@@ -211,7 +211,7 @@ int main() {
 
   /* Remarks */
 #if 0
-  // This expression does not have name.
+  // These expressions have no names.
   std::cout << NAMEOF(ptrvar[0]) << std::endl; // ''
   std::cout << NAMEOF(42.0) << std::endl; // ''
   std::cout << NAMEOF(42) << std::endl; // ''
