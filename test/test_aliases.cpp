@@ -135,7 +135,13 @@ TEST_CASE("static cstring api") {
 
 #if defined(NAMEOF_TYPE_SUPPORTED)
   constexpr auto type_name = NAMEOF_TYPE(Color);
-#  if defined(_MSC_VER)
+  static_assert(NAMEOF_TYPE(int) == NAMEOF_TYPE(const int&));
+  static_assert(NAMEOF_TYPE(int) != NAMEOF_TYPE(long));
+  static_assert(NAMEOF_TYPE(int) < NAMEOF_TYPE(long));
+  static_assert(NAMEOF_TYPE(int) <= NAMEOF_TYPE(const int&));
+  static_assert(NAMEOF_TYPE(long) > NAMEOF_TYPE(int));
+  static_assert(NAMEOF_TYPE(long) >= NAMEOF_TYPE(long));
+#  if defined(_MSC_VER) && !defined(__clang__)
   REQUIRE(type_name.compare("enum Color") == 0);
 #  else
   REQUIRE(type_name.compare("Color") == 0);

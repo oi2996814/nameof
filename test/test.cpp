@@ -65,6 +65,23 @@ struct SomeStruct {
   constexpr static int someotherstaticfield = 21;
 };
 
+struct QualifiedMembers {
+  void const_member() const;
+  void volatile_member() volatile;
+  void lvalue_member() &;
+  void rvalue_member() &&;
+  void noexcept_member() noexcept;
+  void combined_member() const& noexcept;
+
+  template <typename T>
+  void template_member() const;
+};
+
+struct OperatorMembers {
+  int operator+(int) const;
+  operator int() const;
+};
+
 struct NameOfTest {
   int some_member;
 };
@@ -125,12 +142,24 @@ enum class BigFlags : std::uint64_t {
   D = (static_cast<std::uint64_t>(0x1) << 63),
 };
 
+enum class BoolEnum : bool { Off = false, On = true };
+
+enum class BoolFlag : bool { On = true };
+
+enum class BoolRange : bool { On = true };
+
 template <>
 struct nameof::customize::enum_range<number> {
   static_assert(std::is_enum_v<number>, "nameof::enum_range<number> requires enum type.");
   static constexpr int min = 100;
   static constexpr int max = 300;
   static_assert(max > min, "nameof::enum_range<number> requires max > min.");
+};
+
+template <>
+struct nameof::customize::enum_range<BoolRange> {
+  static constexpr int min = 1;
+  static constexpr int max = 1;
 };
 
 enum class OutOfRange {
@@ -168,6 +197,24 @@ constexpr nameof::string_view nameof::customize::enum_name<CustomEnum>(CustomEnu
       return {};
   }
 }
+
+static_assert(!nameof::detail::cmp_less(false, false));
+static_assert(nameof::detail::cmp_less(false, true));
+static_assert(!nameof::detail::cmp_less(true, false));
+static_assert(nameof::detail::cmp_less(0u, true));
+static_assert(!nameof::detail::cmp_less(1u, true));
+static_assert(nameof::detail::cmp_less(-1, true));
+static_assert(!nameof::detail::cmp_less(true, -1));
+static_assert(nameof::detail::cmp_less(-1, static_cast<char>(0)));
+static_assert(!nameof::detail::cmp_less(static_cast<char>(0), -1));
+static_assert(nameof::detail::pretty_name("(").empty());
+static_assert(nameof::detail::pretty_name("<").empty());
+static_assert(nameof::nameof_type<int>() == nameof::nameof_type<const int&>());
+static_assert(nameof::nameof_type<int>() != nameof::nameof_type<long>());
+static_assert(nameof::nameof_type<int>() < nameof::nameof_type<long>());
+static_assert(nameof::nameof_type<int>() <= nameof::nameof_type<const int&>());
+static_assert(nameof::nameof_type<long>() > nameof::nameof_type<int>());
+static_assert(nameof::nameof_type<long>() >= nameof::nameof_type<long>());
 
 #if defined(NAMEOF_ENUM_SUPPORTED)
 static_assert(nameof::detail::is_valid<Color, -12>(), "nameof::detail::is_valid requires valid enum values.");
@@ -217,6 +264,19 @@ SomeClass<int> class_var;
 const SomeClass<int> volatile * ptr_c = nullptr;
 
 const Color color = Color::RED;
+
+template <typename T, typename = void>
+struct has_nameof_short_type : std::false_type {};
+
+template <typename T>
+struct has_nameof_short_type<T, std::void_t<decltype(nameof::nameof_short_type<T>())>> : std::true_type {};
+
+static_assert(has_nameof_short_type<SomeStruct>::value);
+static_assert(has_nameof_short_type<const SomeStruct&>::value);
+static_assert(!has_nameof_short_type<SomeStruct*>::value);
+static_assert(!has_nameof_short_type<SomeStruct*&>::value);
+static_assert(!has_nameof_short_type<SomeStruct[2]>::value);
+static_assert(!has_nameof_short_type<SomeStruct(&)[2]>::value);
 
 template <typename Name>
 void require_cstring_contract(const Name& name, ::nameof::string_view expected) {
@@ -628,6 +688,7 @@ TEST_CASE("nameof_enum") {
     REQUIRE(blue_name == "BLUE");
     require_string_view_contract(blue_name, "BLUE");
     REQUIRE(nameof::nameof_enum(cm[1]) == "GREEN");
+    REQUIRE(nameof::nameof_enum<const Color&>(cr) == "RED");
     NAMEOF_DEBUG_REQUIRE(nameof::nameof_enum(static_cast<Color>(0)).empty());
 
     constexpr Numbers no = Numbers::one;
@@ -653,6 +714,10 @@ TEST_CASE("nameof_enum") {
     REQUIRE(nt_name == "three");
     NAMEOF_DEBUG_REQUIRE(nameof::nameof_enum(number::four).empty());
     NAMEOF_DEBUG_REQUIRE(nameof::nameof_enum(static_cast<number>(0)).empty());
+
+    REQUIRE(nameof::nameof_enum(BoolEnum::Off) == "Off");
+    REQUIRE(nameof::nameof_enum(BoolEnum::On) == "On");
+    REQUIRE(nameof::nameof_enum(BoolRange::On) == "On");
   }
 
   SUBCASE("static storage") {
@@ -711,6 +776,7 @@ TEST_CASE("nameof_enum_flag") {
   require_string_contract(af_name, "HasClaws");
   REQUIRE(empty_af_name.empty());
   require_string_contract(empty_af_name, "");
+  REQUIRE(nameof::nameof_enum_flag<const AnimalFlags&>(af) == "HasClaws");
   REQUIRE(nameof::nameof_enum_flag(AnimalFlags::EatsFish) == "EatsFish");
   REQUIRE(nameof::nameof_enum_flag(afm[1]) == "CanFly");
   NAMEOF_DEBUG_REQUIRE(nameof::nameof_enum_flag(static_cast<AnimalFlags>(0)).empty());
@@ -733,6 +799,9 @@ TEST_CASE("nameof_enum_flag") {
   REQUIRE(nameof::nameof_enum_flag(static_cast<BigFlags>((static_cast<std::uint64_t>(0x1) << 63) | 1)) == "A|D");
   NAMEOF_DEBUG_REQUIRE(nameof::nameof_enum_flag(static_cast<BigFlags>(2)).empty());
   NAMEOF_DEBUG_REQUIRE(nameof::nameof_enum_flag(static_cast<BigFlags>((static_cast<std::uint64_t>(0x1) << 63) | 2)).empty());
+
+  REQUIRE(nameof::nameof_enum_flag(BoolFlag::On) == "On");
+  REQUIRE(nameof::nameof_enum_flag(static_cast<BoolFlag>(false)).empty());
 }
 
 TEST_CASE("NAMEOF_ENUM") {
@@ -769,6 +838,10 @@ TEST_CASE("NAMEOF_ENUM") {
   REQUIRE(nt_name == "three");
   NAMEOF_DEBUG_REQUIRE(NAMEOF_ENUM(number::four).empty());
   NAMEOF_DEBUG_REQUIRE(NAMEOF_ENUM(static_cast<number>(0)).empty());
+
+  REQUIRE(NAMEOF_ENUM(BoolEnum::Off) == "Off");
+  REQUIRE(NAMEOF_ENUM(BoolEnum::On) == "On");
+  REQUIRE(NAMEOF_ENUM(BoolRange::On) == "On");
 }
 
 TEST_CASE("NAMEOF_ENUM_CONST") {
@@ -837,6 +910,9 @@ TEST_CASE("NAMEOF_ENUM_FLAG") {
   REQUIRE(NAMEOF_ENUM_FLAG(static_cast<BigFlags>((static_cast<std::uint64_t>(0x1) << 63) | 1)) == "A|D");
   NAMEOF_DEBUG_REQUIRE(NAMEOF_ENUM_FLAG(static_cast<BigFlags>(2)).empty());
   NAMEOF_DEBUG_REQUIRE(NAMEOF_ENUM_FLAG(static_cast<BigFlags>((static_cast<std::uint64_t>(0x1) << 63) | 2)).empty());
+
+  REQUIRE(NAMEOF_ENUM_FLAG(BoolFlag::On) == "On");
+  REQUIRE(NAMEOF_ENUM_FLAG(static_cast<BoolFlag>(false)).empty());
 }
 
 TEST_CASE("nameof_enum_or") {
@@ -1476,6 +1552,7 @@ struct StructWithNonConstexprDestructor {
 TEST_CASE("NAMEOF_MEMBER") {
   REQUIRE(NAMEOF_MEMBER(&SomeStruct::somefield) == "somefield");
   REQUIRE(NAMEOF_MEMBER(&SomeStruct::SomeMethod1) == "SomeMethod1");
+  REQUIRE(NAMEOF_MEMBER(&QualifiedMembers::const_member) == "const_member");
   REQUIRE(NAMEOF_MEMBER(&Long::LL::field) == "field");
   constexpr auto member_ptr = &SomeStruct::somefield;
   REQUIRE(NAMEOF_MEMBER(member_ptr) == "somefield");
@@ -1490,6 +1567,17 @@ TEST_CASE("NAMEOF_MEMBER") {
 TEST_CASE("nameof_member") {
   REQUIRE(nameof::nameof_member<&SomeStruct::somefield>() == "somefield");
   REQUIRE(nameof::nameof_member<&SomeStruct::SomeMethod1>() == "SomeMethod1");
+  REQUIRE(nameof::nameof_member<&QualifiedMembers::const_member>() == "const_member");
+  REQUIRE(nameof::nameof_member<&QualifiedMembers::volatile_member>() == "volatile_member");
+  REQUIRE(nameof::nameof_member<&QualifiedMembers::lvalue_member>() == "lvalue_member");
+  REQUIRE(nameof::nameof_member<&QualifiedMembers::rvalue_member>() == "rvalue_member");
+  REQUIRE(nameof::nameof_member<&QualifiedMembers::noexcept_member>() == "noexcept_member");
+  REQUIRE(nameof::nameof_member<&QualifiedMembers::combined_member>() == "combined_member");
+  REQUIRE(nameof::nameof_member<&QualifiedMembers::template_member<int>>() == "template_member");
+#if defined(_MSC_VER) && !defined(__clang__)
+  REQUIRE(nameof::nameof_member<&OperatorMembers::operator+>().empty());
+  REQUIRE(nameof::nameof_member<&OperatorMembers::operator int>().empty());
+#endif
   REQUIRE(nameof::nameof_member<&Long::LL::field>() == "field");
   constexpr auto member_ptr = &SomeStruct::somefield;
   REQUIRE(nameof::nameof_member<member_ptr>() == "somefield");

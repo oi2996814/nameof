@@ -35,8 +35,35 @@ function(make_test src target std)
     add_test(NAME ${target} COMMAND ${target})
 endfunction()
 
+function(make_compile_fail_test case_name case_id expected_text)
+    set(target "compile-fail-${case_name}")
+
+    add_executable(${target} EXCLUDE_FROM_ALL compile_fail.cpp)
+    target_compile_options(${target} PRIVATE ${OPTIONS})
+    target_compile_definitions(${target} PRIVATE NAMEOF_COMPILE_FAIL_CASE=${case_id})
+    target_link_libraries(${target} PRIVATE ${PROJECT_NAME})
+    set_target_properties(${target} PROPERTIES CXX_EXTENSIONS OFF)
+
+    add_test(
+        NAME ${target}
+        COMMAND ${CMAKE_COMMAND}
+            "-DBUILD_DIR=${CMAKE_BINARY_DIR}"
+            "-DTARGET_NAME=${target}"
+            "-DCONFIG=$<CONFIG>"
+            "-DEXPECTED_TEXT=${expected_text}"
+            -P "${CMAKE_CURRENT_SOURCE_DIR}/check_compile_fail.cmake"
+    )
+    set_tests_properties(${target} PROPERTIES RUN_SERIAL TRUE)
+endfunction()
+
 make_test(test.cpp test-cpp17 c++17)
 make_test(test_aliases.cpp test_aliases-cpp17 c++17)
+
+make_compile_fail_test(enum-no-values 1 "nameof::nameof_enum requires at least one reflected enum value")
+make_compile_fail_test(flags-no-single-bit 2 "nameof::nameof_enum_flag requires at least one reflected single-bit enumerator")
+make_compile_fail_test(expression-no-name 3 "Expression does not have a name")
+make_compile_fail_test(inverted-range 4 "nameof::customize::enum_range must contain at least one value")
+make_compile_fail_test(range-too-large 5 "nameof::customize::enum_range must contain fewer than UINT16_MAX values")
 
 if(HAS_CPP20_FLAG)
     make_test(test.cpp test-cpp20 c++20)
