@@ -26,6 +26,8 @@
 * To check whether nameof_pointer is supported by your compiler, use the macro `NAMEOF_POINTER_SUPPORTED` or the constexpr constant `nameof::is_nameof_pointer_supported`.<br>
   If nameof_pointer is used on an unsupported compiler, a compilation error occurs. To suppress the check, define the macro `NAMEOF_TYPE_NO_CHECK_SUPPORT`.
 
+* `nameof_member` does not support overloaded operator names.
+
 ## Nameof Enum
 
 * This library uses a compiler-specific hack (based on `__PRETTY_FUNCTION__` / `__FUNCSIG__`), which works on Clang >= 5, Visual Studio >= 2017, and GCC >= 9.
@@ -64,6 +66,8 @@
       static constexpr int max = 300;
     };
     ```
+
+  * Enum ranges are limited to fewer than `UINT16_MAX` values.
 
 * Names of aliased enum values are compiler-dependent.
 
