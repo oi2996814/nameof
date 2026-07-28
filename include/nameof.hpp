@@ -358,6 +358,15 @@ template <std::uint16_t N>
   return lhs.compare(rhs) == 0;
 }
 
+template <std::uint16_t N, std::uint16_t M>
+[[nodiscard]] constexpr bool operator==(const cstring<N>& lhs, const cstring<M>& rhs) noexcept {
+  if constexpr (N != M) {
+    return false;
+  } else {
+    return lhs.compare(string_view{rhs.data(), rhs.size()}) == 0;
+  }
+}
+
 template <std::uint16_t N>
 [[nodiscard]] constexpr bool operator==(string_view lhs, const cstring<N>& rhs) noexcept {
   return lhs.compare(rhs) == 0;
@@ -366,6 +375,11 @@ template <std::uint16_t N>
 template <std::uint16_t N>
 [[nodiscard]] constexpr bool operator!=(const cstring<N>& lhs, string_view rhs) noexcept {
   return lhs.compare(rhs) != 0;
+}
+
+template <std::uint16_t N, std::uint16_t M>
+[[nodiscard]] constexpr bool operator!=(const cstring<N>& lhs, const cstring<M>& rhs) noexcept {
+  return !(lhs == rhs);
 }
 
 template <std::uint16_t N>
@@ -378,6 +392,11 @@ template <std::uint16_t N>
   return lhs.compare(rhs) > 0;
 }
 
+template <std::uint16_t N, std::uint16_t M>
+[[nodiscard]] constexpr bool operator>(const cstring<N>& lhs, const cstring<M>& rhs) noexcept {
+  return lhs.compare(string_view{rhs.data(), rhs.size()}) > 0;
+}
+
 template <std::uint16_t N>
 [[nodiscard]] constexpr bool operator>(string_view lhs, const cstring<N>& rhs) noexcept {
   return lhs.compare(rhs) > 0;
@@ -386,6 +405,11 @@ template <std::uint16_t N>
 template <std::uint16_t N>
 [[nodiscard]] constexpr bool operator>=(const cstring<N>& lhs, string_view rhs) noexcept {
   return lhs.compare(rhs) >= 0;
+}
+
+template <std::uint16_t N, std::uint16_t M>
+[[nodiscard]] constexpr bool operator>=(const cstring<N>& lhs, const cstring<M>& rhs) noexcept {
+  return lhs.compare(string_view{rhs.data(), rhs.size()}) >= 0;
 }
 
 template <std::uint16_t N>
@@ -398,6 +422,11 @@ template <std::uint16_t N>
   return lhs.compare(rhs) < 0;
 }
 
+template <std::uint16_t N, std::uint16_t M>
+[[nodiscard]] constexpr bool operator<(const cstring<N>& lhs, const cstring<M>& rhs) noexcept {
+  return lhs.compare(string_view{rhs.data(), rhs.size()}) < 0;
+}
+
 template <std::uint16_t N>
 [[nodiscard]] constexpr bool operator<(string_view lhs, const cstring<N>& rhs) noexcept {
   return lhs.compare(rhs) < 0;
@@ -406,6 +435,11 @@ template <std::uint16_t N>
 template <std::uint16_t N>
 [[nodiscard]] constexpr bool operator<=(const cstring<N>& lhs, string_view rhs) noexcept {
   return lhs.compare(rhs) <= 0;
+}
+
+template <std::uint16_t N, std::uint16_t M>
+[[nodiscard]] constexpr bool operator<=(const cstring<N>& lhs, const cstring<M>& rhs) noexcept {
+  return lhs.compare(string_view{rhs.data(), rhs.size()}) <= 0;
 }
 
 template <std::uint16_t N>
