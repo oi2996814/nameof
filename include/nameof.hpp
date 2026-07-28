@@ -62,16 +62,15 @@
 
 #if defined(__clang__)
 #  pragma clang diagnostic push
-#  pragma clang diagnostic ignored "-Wunknown-warning-option"
-#  pragma clang diagnostic ignored "-Wenum-constexpr-conversion"
+#  if __has_warning("-Wenum-constexpr-conversion")
+#    pragma clang diagnostic ignored "-Wenum-constexpr-conversion"
+#  endif
 #elif defined(__GNUC__)
 #  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Wstringop-overflow" // Missing terminating nul 'enum_name_v'.
 #elif defined(_MSC_VER)
 #  pragma warning(push)
-#  pragma warning(disable : 26495) // Variable 'cstring<N>::chars_' is uninitialized.
-#  pragma warning(disable : 28020) // Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value.
-#  pragma warning(disable : 26451) // The expression '0<=_Param_(1)&&_Param_(1)<=1-1' is not true at this call.
+#  pragma warning(disable : 28020) // Code analysis false positive for bounds-checked enum value arrays.
 #  pragma warning(disable : 4514) // Unreferenced inline function has been removed.
 #endif
 
@@ -837,7 +836,7 @@ constexpr int reflected_max() noexcept {
 
 template <std::size_t N>
 struct valid_count_t {
-  std::size_t count = 0;
+  std::uint16_t count = 0;
   std::uint16_t offsets[N] = {};
 
   constexpr void set(std::size_t i) noexcept {
