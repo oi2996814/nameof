@@ -30,9 +30,9 @@
 
 enum class NoReflectedValues { value = 1000 };
 
-int main() {
-  (void)nameof::nameof_enum(NoReflectedValues::value);
-}
+constexpr auto no_reflected_value_name = nameof::nameof_enum(NoReflectedValues::value);
+
+int main() {}
 
 #elif NAMEOF_COMPILE_FAIL_CASE == 2
 
@@ -58,9 +58,9 @@ struct nameof::customize::enum_range<InvertedRange> {
   static constexpr int max = 0;
 };
 
-int main() {
-  (void)nameof::nameof_enum(InvertedRange::value);
-}
+constexpr auto inverted_range_name = nameof::nameof_enum(InvertedRange::value);
+
+int main() {}
 
 #elif NAMEOF_COMPILE_FAIL_CASE == 5
 
@@ -72,9 +72,9 @@ struct nameof::customize::enum_range<OversizedRange> {
   static constexpr int max = 65534;
 };
 
-int main() {
-  (void)nameof::nameof_enum(OversizedRange::value);
-}
+constexpr auto oversized_range_name = nameof::nameof_enum(OversizedRange::value);
+
+int main() {}
 
 #else
 

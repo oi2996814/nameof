@@ -1262,16 +1262,18 @@ template <typename E>
   static_assert(detail::nameof_enum_supported<D>::value, "nameof::nameof_enum is not supported by this compiler (https://github.com/Neargye/nameof#compiler-compatibility).");
   static_assert(detail::count_v<D> > 0, "nameof::nameof_enum requires at least one reflected enum value in the configured range.");
 
-  if constexpr (detail::is_sparse_v<D>) {
-    for (std::size_t i = 0; i < detail::count_v<D>; ++i) {
-      if (detail::enum_value<D>(i) == value) {
-        return detail::names_v<D>[i];
+  if constexpr (detail::count_v<D> > 0) {
+    if constexpr (detail::is_sparse_v<D>) {
+      for (std::size_t i = 0; i < detail::count_v<D>; ++i) {
+        if (detail::enum_value<D>(i) == value) {
+          return detail::names_v<D>[i];
+        }
       }
-    }
-  } else {
-    const auto v = static_cast<U>(value);
-    if (v >= detail::min_v<D> && v <= detail::max_v<D>) {
-      return detail::names_v<D>[static_cast<std::size_t>(v - detail::min_v<D>)];
+    } else {
+      const auto v = static_cast<U>(value);
+      if (v >= detail::min_v<D> && v <= detail::max_v<D>) {
+        return detail::names_v<D>[static_cast<std::size_t>(v - detail::min_v<D>)];
+      }
     }
   }
   return string_view{""};
@@ -1372,7 +1374,7 @@ template <auto V, std::enable_if_t<std::is_pointer_v<decltype(V)>, int> = 0>
 
 } // namespace nameof
 
-#if __has_include(<format>)
+#if __has_include(<format>) && ((defined(_MSVC_LANG) && _MSVC_LANG >= 202002L) || __cplusplus >= 202002L)
 #  include <format>
 
 #  if defined(__cpp_lib_format) && __cpp_lib_format >= 201907L

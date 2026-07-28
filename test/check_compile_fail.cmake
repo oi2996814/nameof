@@ -32,6 +32,17 @@ if(diagnostic_position EQUAL -1)
     )
 endif()
 
+if(DEFINED UNEXPECTED_TEXT AND NOT UNEXPECTED_TEXT STREQUAL "")
+    string(FIND "${build_output}" "${UNEXPECTED_TEXT}" unexpected_diagnostic_position)
+    if(NOT unexpected_diagnostic_position EQUAL -1)
+        message(FATAL_ERROR
+            "Compile-fail target '${TARGET_NAME}' produced an unexpected secondary diagnostic:\n"
+            "  ${UNEXPECTED_TEXT}\n"
+            "Compiler output:\n${build_output}"
+        )
+    endif()
+endif()
+
 message(STATUS
     "Compile-fail target '${TARGET_NAME}' produced the expected diagnostic: "
     "${EXPECTED_TEXT}"
