@@ -44,6 +44,7 @@
 #include <iterator>
 #include <limits>
 #include <type_traits>
+#include <typeinfo>
 #include <utility>
 
 #if !defined(NAMEOF_USING_ALIAS_STRING)
@@ -422,6 +423,19 @@ std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& o
 
 namespace detail {
 
+constexpr bool is_name_char(char c) noexcept {
+  return (c >= '0' && c <= '9') ||
+         (c >= 'a' && c <= 'z') ||
+         (c >= 'A' && c <= 'Z') ||
+         c == '_';
+}
+
+constexpr bool is_name_start(char c) noexcept {
+  return (c >= 'a' && c <= 'z') ||
+         (c >= 'A' && c <= 'Z') ||
+         c == '_';
+}
+
 constexpr string_view pretty_name(string_view name, bool remove_suffix = true) noexcept {
   if (name.size() >= 1 && (name[0] == '"' || name[0] == '\'')) {
     return {}; // Narrow multibyte string literal.
@@ -445,6 +459,9 @@ constexpr string_view pretty_name(string_view name, bool remove_suffix = true) n
       ++s;
       continue;
     } else if (name[i - 1] == '(') {
+      if (h == 0) {
+        return {};
+      }
       --h;
       ++s;
       continue;
@@ -466,6 +483,9 @@ constexpr string_view pretty_name(string_view name, bool remove_suffix = true) n
       ++s;
       continue;
     } else if (name[i - 1] == '<') {
+      if (h == 0) {
+        return {};
+      }
       --h;
       ++s;
       continue;
@@ -480,10 +500,7 @@ constexpr string_view pretty_name(string_view name, bool remove_suffix = true) n
   }
 
   for (std::size_t i = name.size() - s; i > 0; --i) {
-    if (!((name[i - 1] >= '0' && name[i - 1] <= '9') ||
-          (name[i - 1] >= 'a' && name[i - 1] <= 'z') ||
-          (name[i - 1] >= 'A' && name[i - 1] <= 'Z') ||
-          (name[i - 1] == '_'))) {
+    if (!is_name_char(name[i - 1])) {
       name.remove_prefix(i);
       break;
     }
@@ -492,14 +509,57 @@ constexpr string_view pretty_name(string_view name, bool remove_suffix = true) n
     name.remove_suffix(s);
   }
 
-  if (name.size() > 0 && ((name[0] >= 'a' && name[0] <= 'z') ||
-                          (name[0] >= 'A' && name[0] <= 'Z') ||
-                          (name[0] == '_'))) {
+  if (!name.empty() && is_name_start(name[0])) {
     return name;
   }
 
   return {}; // Invalid name.
 }
+
+#if defined(_MSC_VER) && !defined(__clang__)
+constexpr string_view pretty_member_name(string_view signature) noexcept {
+  std::size_t template_begin = 0;
+  for (; template_begin < signature.size() && signature[template_begin] != '<'; ++template_begin) {}
+  if (template_begin == signature.size()) {
+    return {};
+  }
+
+  for (std::size_t i = template_begin + 1; i + 2 < signature.size(); ++i) {
+    if (signature[i] != ':' || signature[i + 1] != ':' || !is_name_start(signature[i + 2])) {
+      continue;
+    }
+
+    const auto name_begin = i + 2;
+    auto name_end = name_begin + 1;
+    while (name_end < signature.size() && is_name_char(signature[name_end])) {
+      ++name_end;
+    }
+
+    auto parameter_begin = name_end;
+    if (parameter_begin < signature.size() && signature[parameter_begin] == '<') {
+      std::size_t depth = 0;
+      do {
+        if (signature[parameter_begin] == '<') {
+          ++depth;
+        } else if (signature[parameter_begin] == '>') {
+          --depth;
+        }
+        ++parameter_begin;
+      } while (parameter_begin < signature.size() && depth > 0);
+
+      if (depth > 0) {
+        return {};
+      }
+    }
+
+    if (parameter_begin < signature.size() && signature[parameter_begin] == '(') {
+      return string_view{signature.data() + name_begin, name_end - name_begin};
+    }
+  }
+
+  return {};
+}
+#endif
 
 constexpr bool enum_name_valid(string_view name) noexcept {
 #if defined(__clang__)
@@ -1057,7 +1117,9 @@ constexpr auto n() noexcept {
 #if defined(__clang__) || defined(__GNUC__)
     constexpr auto name = pretty_name({__PRETTY_FUNCTION__, sizeof(__PRETTY_FUNCTION__) - 2});
 #elif defined(_MSC_VER) && defined(_MSVC_LANG) && _MSVC_LANG >= 202002L
-    constexpr auto name = pretty_name({__FUNCSIG__, sizeof(__FUNCSIG__) - 18 + std::is_member_function_pointer_v<decltype(U)>});
+    constexpr auto name = std::is_member_function_pointer_v<decltype(U)>
+                            ? pretty_member_name({__FUNCSIG__, sizeof(__FUNCSIG__) - 1})
+                            : pretty_name({__FUNCSIG__, sizeof(__FUNCSIG__) - 18});
 #else
     constexpr auto name = string_view{""};
 #endif
