@@ -205,8 +205,27 @@ static_assert(nameof::detail::cmp_less(0u, true));
 static_assert(!nameof::detail::cmp_less(1u, true));
 static_assert(nameof::detail::cmp_less(-1, true));
 static_assert(!nameof::detail::cmp_less(true, -1));
+static_assert(nameof::detail::cmp_less(-1, 0u));
+static_assert(!nameof::detail::cmp_less(0u, -1));
 static_assert(nameof::detail::cmp_less(-1, static_cast<char>(0)));
 static_assert(!nameof::detail::cmp_less(static_cast<char>(0), -1));
+constexpr ::nameof::cstring<3> cstring_abc{::nameof::string_view{"abc"}};
+constexpr ::nameof::cstring<3> cstring_abd{::nameof::string_view{"abd"}};
+static_assert(std::is_nothrow_default_constructible_v<::nameof::cstring<0>>);
+static_assert(std::is_nothrow_copy_constructible_v<::nameof::cstring<3>>);
+static_assert(std::is_nothrow_move_constructible_v<::nameof::cstring<3>>);
+static_assert(std::is_nothrow_copy_assignable_v<::nameof::cstring<3>>);
+static_assert(std::is_nothrow_move_assignable_v<::nameof::cstring<3>>);
+static_assert(std::is_nothrow_destructible_v<::nameof::cstring<3>>);
+static_assert(noexcept(cstring_abc.compare(::nameof::string_view{"abc"})));
+static_assert(!noexcept(cstring_abc.str()));
+static_assert(!noexcept(static_cast<::nameof::string>(cstring_abc)));
+static_assert(!(cstring_abc == cstring_abd));
+static_assert(cstring_abc != cstring_abd);
+static_assert(cstring_abc < cstring_abd);
+static_assert(cstring_abc <= cstring_abd);
+static_assert(!(cstring_abc > cstring_abd));
+static_assert(!(cstring_abc >= cstring_abd));
 static_assert(nameof::detail::pretty_name("(").empty());
 static_assert(nameof::detail::pretty_name("<").empty());
 static_assert(nameof::nameof_type<int>() == nameof::nameof_type<const int&>());
@@ -250,6 +269,27 @@ constexpr nameof::string_view nameof::customize::pointer_name<&custom_pointer_va
   return "custom_pointer";
 }
 
+#if defined(NAMEOF_ENUM_SUPPORTED) && NAMEOF_ENUM_SUPPORTED
+static_assert(noexcept(nameof::nameof_enum(Color::RED)));
+static_assert(noexcept(nameof::nameof_enum<Color::RED>()));
+static_assert(!noexcept(nameof::nameof_enum_or(Color::RED, std::declval<nameof::string_view>())));
+static_assert(!noexcept(nameof::nameof_enum_flag(AnimalFlags::HasClaws)));
+#endif
+
+#if defined(NAMEOF_TYPE_SUPPORTED) && NAMEOF_TYPE_SUPPORTED
+static_assert(noexcept(nameof::nameof_type<SomeStruct>()));
+static_assert(noexcept(nameof::nameof_full_type<const SomeStruct&>()));
+static_assert(noexcept(nameof::nameof_short_type<SomeStruct>()));
+#endif
+
+#if defined(NAMEOF_MEMBER_SUPPORTED) && NAMEOF_MEMBER_SUPPORTED
+static_assert(noexcept(nameof::nameof_member<&NameOfTest::some_member>()));
+#endif
+
+#if defined(NAMEOF_POINTER_SUPPORTED) && NAMEOF_POINTER_SUPPORTED
+static_assert(noexcept(nameof::nameof_pointer<&custom_pointer_value>()));
+#endif
+
 struct TestRtti {
   struct Base { virtual ~Base() = default; };
   struct Derived : Base {};
@@ -274,6 +314,7 @@ struct has_nameof_short_type<T, std::void_t<decltype(nameof::nameof_short_type<T
 static_assert(has_nameof_short_type<SomeStruct>::value);
 static_assert(has_nameof_short_type<const SomeStruct&>::value);
 static_assert(!has_nameof_short_type<SomeStruct*>::value);
+static_assert(!has_nameof_short_type<SomeStruct* const>::value);
 static_assert(!has_nameof_short_type<SomeStruct*&>::value);
 static_assert(!has_nameof_short_type<SomeStruct[2]>::value);
 static_assert(!has_nameof_short_type<SomeStruct(&)[2]>::value);

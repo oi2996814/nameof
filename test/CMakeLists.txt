@@ -1,6 +1,6 @@
 ﻿include(CheckCXXCompilerFlag)
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC" OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC"))
     set(OPTIONS /W4 /WX)
     check_cxx_compiler_flag(/permissive- HAS_PERMISSIVE_FLAG)
     if(HAS_PERMISSIVE_FLAG)
@@ -56,6 +56,7 @@ endfunction()
 
 make_test(test.cpp test-cpp17 17)
 make_test(test_aliases.cpp test_aliases-cpp17 17)
+make_test(test_standalone.cpp test-standalone-cpp17 17)
 
 make_compile_fail_test(enum-no-values 1 "nameof::nameof_enum requires at least one reflected enum value" "names_v")
 make_compile_fail_test(flags-no-single-bit 2 "nameof::nameof_enum_flag requires at least one reflected single-bit enumerator")

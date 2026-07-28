@@ -28,3 +28,19 @@ jobs:
 
     - name: Test
       run: ctest --test-dir build --output-on-failure -C ${{ matrix.build_type }}
+
+  clang-cl:
+    name: "Clang-cl / x64 / Release"
+    runs-on: windows-2025
+
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Configure
+      run: cmake -S . -B build -G "Visual Studio 18 2026" -A x64 -T ClangCL
+
+    - name: Build
+      run: cmake --build build --parallel --config Release
+
+    - name: Test
+      run: ctest --test-dir build --output-on-failure -C Release

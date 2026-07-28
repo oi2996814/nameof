@@ -46,23 +46,23 @@ struct MyStringView {
   using value_type = char; // required
   static constexpr auto npos = std::string_view::npos; // required
 
-  constexpr MyStringView() : str{} {} // required
-  constexpr MyStringView(const char* s) : str{s} {} // required
-  constexpr MyStringView(const char* s, std::size_t size) : str{s, size} {} // required
-  constexpr bool empty() const { return str.empty(); } // required
-  constexpr std::size_t size() const { return str.size(); } // required
-  constexpr const char* data() const { return str.data(); } // required
-  constexpr const char& operator[](std::size_t i) const { return str[i]; } // required
-  constexpr void remove_prefix(std::size_t n) { str.remove_prefix(n); } // required
-  constexpr void remove_suffix(std::size_t n) { str.remove_suffix(n); } // required
-  constexpr int compare(MyStringView s) const { return str.compare(s.str); } // required
+  constexpr MyStringView() noexcept : str{} {} // required
+  constexpr MyStringView(const char* s) noexcept : str{s} {} // required
+  constexpr MyStringView(const char* s, std::size_t size) noexcept : str{s, size} {} // required
+  constexpr bool empty() const noexcept { return str.empty(); } // required
+  constexpr std::size_t size() const noexcept { return str.size(); } // required
+  constexpr const char* data() const noexcept { return str.data(); } // required
+  constexpr const char& operator[](std::size_t i) const noexcept { return str[i]; } // required
+  constexpr void remove_prefix(std::size_t n) noexcept { str.remove_prefix(n); } // required
+  constexpr void remove_suffix(std::size_t n) noexcept { str.remove_suffix(n); } // required
+  constexpr int compare(MyStringView s) const noexcept { return str.compare(s.str); } // required
 
-  constexpr int compare(const char* s) const { return str.compare(s); }
+  constexpr int compare(const char* s) const noexcept { return str.compare(s); }
 
  private:
   std::string_view str;
 
-  constexpr MyStringView(std::string_view s) : str{s} {}
+  constexpr MyStringView(std::string_view s) noexcept : str{s} {}
 };
 
 #define NAMEOF_USING_ALIAS_STRING using string = MyString;
@@ -71,6 +71,9 @@ struct MyStringView {
 #include <nameof.hpp>
 
 enum class Color { RED = 1, GREEN = 2, BLUE = 4 };
+
+static_assert(noexcept(nameof::nameof_enum(Color::RED)));
+static_assert(!noexcept(nameof::nameof_enum_flag(Color::RED)));
 
 struct AliasStruct {
   int member = 0;
@@ -91,6 +94,9 @@ TEST_CASE("string") {
   auto cn = nameof::nameof_enum_flag(Color{0});
   REQUIRE(cn.empty());
   REQUIRE(cn.size() == 0);
+
+  auto qualified_name = nameof::detail::full_type_name<const volatile int&&>(nameof::string{"int"});
+  REQUIRE(qualified_name.compare("volatile const int&&") == 0);
 }
 
 TEST_CASE("string_view") {
