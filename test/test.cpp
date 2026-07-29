@@ -28,6 +28,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <type_traits>
+#include <utility>
 
 #if __has_include(<fmt/format.h>)
 #  include <fmt/format.h>
@@ -217,7 +218,7 @@ static_assert(std::is_nothrow_move_constructible_v<::nameof::cstring<3>>);
 static_assert(std::is_nothrow_copy_assignable_v<::nameof::cstring<3>>);
 static_assert(std::is_nothrow_move_assignable_v<::nameof::cstring<3>>);
 static_assert(std::is_nothrow_destructible_v<::nameof::cstring<3>>);
-static_assert(noexcept(cstring_abc.compare(::nameof::string_view{"abc"})));
+static_assert(noexcept(cstring_abc.compare(std::declval<::nameof::string_view>())));
 static_assert(!noexcept(cstring_abc.str()));
 static_assert(!noexcept(static_cast<::nameof::string>(cstring_abc)));
 static_assert(!(cstring_abc == cstring_abd));
