@@ -1052,17 +1052,23 @@ inline constexpr auto short_type_name_v = short_type_name<T>();
 
 template <typename T>
 string full_type_name(string name) {
-  if constexpr (std::is_const_v<std::remove_reference_t<T>>) {
-    name = string{"const "}.append(name);
-  }
-  if constexpr (std::is_volatile_v<std::remove_reference_t<T>>) {
-    name = string{"volatile "}.append(name);
+  using U = std::remove_reference_t<T>;
+  if constexpr (std::is_const_v<U> || std::is_volatile_v<U>) {
+    string qualified_name;
+    if constexpr (std::is_volatile_v<U>) {
+      qualified_name.append("volatile ", 9);
+    }
+    if constexpr (std::is_const_v<U>) {
+      qualified_name.append("const ", 6);
+    }
+    qualified_name.append(name);
+    name = std::move(qualified_name);
   }
   if constexpr (std::is_lvalue_reference_v<T>) {
     name.append(1, '&');
   }
   if constexpr (std::is_rvalue_reference_v<T>) {
-    name.append("&&");
+    name.append("&&", 2);
   }
   return name;
 }
