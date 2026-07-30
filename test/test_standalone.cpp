@@ -22,6 +22,10 @@
 
 #include <nameof.hpp>
 
+#if defined(NAMEOF_ARRAY_CONSTEXPR) || defined(NAMEOF_FOR_EACH_256)
+#  error "nameof internal implementation macro leaked from the public header."
+#endif
+
 enum class DefaultRangeBoundary {
   lower = -128,
   upper = 127,

@@ -1476,6 +1476,9 @@ struct fmt::formatter<nameof::cstring<N>> : fmt::formatter<fmt::string_view> {
 // Obtains name of a function, a global or class static variable.
 #define NAMEOF_POINTER(...) ::nameof::nameof_pointer<__VA_ARGS__>()
 
+#undef NAMEOF_ARRAY_CONSTEXPR
+#undef NAMEOF_FOR_EACH_256
+
 #if defined(__clang__)
 #  pragma clang diagnostic pop
 #elif defined(__GNUC__)
