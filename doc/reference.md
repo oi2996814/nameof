@@ -87,7 +87,7 @@
 * Compiler compatibility
   * Clang/LLVM >= 5 and C++ >= 17
   * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 7 and C++ >= 17
+  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_FULL`
 
@@ -110,7 +110,7 @@
 * Compiler compatibility
   * Clang/LLVM >= 5 and C++ >= 17
   * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 7 and C++ >= 17
+  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_RAW`
 
@@ -128,7 +128,7 @@
 * Compiler compatibility
   * Clang/LLVM >= 5 and C++ >= 17
   * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 7 and C++ >= 17
+  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_ENUM`
 
@@ -252,7 +252,7 @@
 * Compiler compatibility
   * Clang/LLVM >= 5 and C++ >= 17
   * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 7 and C++ >= 17
+  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_FULL_TYPE`
 
@@ -275,7 +275,7 @@
 * Compiler compatibility
   * Clang/LLVM >= 5 and C++ >= 17
   * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 7 and C++ >= 17
+  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_SHORT_TYPE`
 
@@ -300,7 +300,7 @@
 * Compiler compatibility
   * Clang/LLVM >= 5 and C++ >= 17
   * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 7 and C++ >= 17
+  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_TYPE_EXPR`
 
@@ -324,7 +324,7 @@
 * Compiler compatibility
   * Clang/LLVM >= 5 and C++ >= 17
   * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 7 and C++ >= 17
+  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_FULL_TYPE_EXPR`
 
@@ -348,7 +348,7 @@
 * Compiler compatibility
   * Clang/LLVM >= 5 and C++ >= 17
   * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 7 and C++ >= 17
+  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_SHORT_TYPE_EXPR`
 
@@ -373,7 +373,7 @@
 * Compiler compatibility
   * Clang/LLVM >= 5 and C++ >= 17
   * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 7 and C++ >= 17
+  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_TYPE_RTTI`
 
@@ -391,7 +391,7 @@
 * Compiler compatibility
   * Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled
   * Visual Studio >= 2017 and C++ >= 17 and RTTI enabled
-  * GCC >= 7 and C++ >= 17 and RTTI enabled
+  * GCC >= 9 and C++ >= 17 and RTTI enabled
 
 ## `NAMEOF_FULL_TYPE_RTTI`
 
@@ -410,7 +410,7 @@
 * Compiler compatibility
   * Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled
   * Visual Studio >= 2017 and C++ >= 17 and RTTI enabled
-  * GCC >= 7 and C++ >= 17 and RTTI enabled
+  * GCC >= 9 and C++ >= 17 and RTTI enabled
 
 ## `NAMEOF_SHORT_TYPE_RTTI`
 
@@ -430,7 +430,7 @@
 * Compiler compatibility
   * Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled
   * Visual Studio >= 2017 and C++ >= 17 and RTTI enabled
-  * GCC >= 7 and C++ >= 17 and RTTI enabled
+  * GCC >= 9 and C++ >= 17 and RTTI enabled
 
 ## `NAMEOF_MEMBER`
 
@@ -454,7 +454,7 @@
 * Compiler compatibility
   * Clang/LLVM >= 5 and C++ >= 17
   * Visual Studio >= 2022 and C++ >= 20
-  * GCC >= 7 and C++ >= 17
+  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_POINTER`
 
@@ -481,4 +481,4 @@
 * Compiler compatibility
   * Clang/LLVM >= 5 and C++ >= 17
   * Visual Studio >= 2022 and C++ >= 20
-  * GCC >= 7 and C++ >= 17
+  * GCC >= 9 and C++ >= 17

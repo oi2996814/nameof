@@ -65,9 +65,6 @@
 #  if __has_warning("-Wenum-constexpr-conversion")
 #    pragma clang diagnostic ignored "-Wenum-constexpr-conversion"
 #  endif
-#elif defined(__GNUC__)
-#  pragma GCC diagnostic push
-#  pragma GCC diagnostic ignored "-Wstringop-overflow" // Missing terminating nul 'enum_name_v'.
 #elif defined(_MSC_VER)
 #  pragma warning(push)
 #  pragma warning(disable : 28020) // Code analysis false positive for bounds-checked enum value arrays.
@@ -75,7 +72,7 @@
 #endif
 
 // Checks nameof_type compiler compatibility.
-#if defined(__clang__) && __clang_major__ >= 5 || defined(__GNUC__) && __GNUC__ >= 7 || defined(_MSC_VER) && _MSC_VER >= 1910
+#if defined(__clang__) && __clang_major__ >= 5 || defined(__GNUC__) && __GNUC__ >= 9 || defined(_MSC_VER) && _MSC_VER >= 1910
 #  undef  NAMEOF_TYPE_SUPPORTED
 #  define NAMEOF_TYPE_SUPPORTED 1
 #endif
@@ -86,7 +83,7 @@
 #    undef  NAMEOF_TYPE_RTTI_SUPPORTED
 #    define NAMEOF_TYPE_RTTI_SUPPORTED 1
 #  endif
-#elif defined(__GNUC__)
+#elif defined(__GNUC__) && __GNUC__ >= 9
 #  if defined(__GXX_RTTI)
 #    undef  NAMEOF_TYPE_RTTI_SUPPORTED
 #    define NAMEOF_TYPE_RTTI_SUPPORTED 1
@@ -99,13 +96,13 @@
 #endif
 
 // Checks nameof_member compiler compatibility.
-#if defined(__clang__) && __clang_major__ >= 5 || defined(__GNUC__) && __GNUC__ >= 7 || defined(_MSC_VER) && defined(_MSVC_LANG) && _MSVC_LANG >= 202002L
+#if defined(__clang__) && __clang_major__ >= 5 || defined(__GNUC__) && __GNUC__ >= 9 || defined(_MSC_VER) && defined(_MSVC_LANG) && _MSVC_LANG >= 202002L
 #  undef  NAMEOF_MEMBER_SUPPORTED
 #  define NAMEOF_MEMBER_SUPPORTED 1
 #endif
 
 // Checks nameof_pointer compiler compatibility.
-#if defined(__clang__) && __clang_major__ >= 5 || defined(__GNUC__) && __GNUC__ >= 7 || defined(_MSC_VER) && defined(_MSVC_LANG) && _MSVC_LANG >= 202002L
+#if defined(__clang__) && __clang_major__ >= 5 || defined(__GNUC__) && __GNUC__ >= 9 || defined(_MSC_VER) && defined(_MSVC_LANG) && _MSVC_LANG >= 202002L
 #  undef  NAMEOF_POINTER_SUPPORTED
 #  define NAMEOF_POINTER_SUPPORTED 1
 #endif
@@ -778,6 +775,7 @@ template <typename E, int O, bool IsFlags, typename U = std::underlying_type_t<E
 constexpr U ualue(std::size_t i) noexcept {
   if constexpr (IsFlags) {
     if constexpr (std::is_same_v<U, bool>) {
+      static_cast<void>(i);
       return true;
     } else {
       return static_cast<U>(U{1} << static_cast<U>(static_cast<int>(i) + O));
@@ -1294,6 +1292,8 @@ template <typename E>
     if (auto v = nameof_enum<D>(value); !v.empty()) {
       return string{v.data(), v.size()};
     }
+  } else {
+    static_cast<void>(value);
   }
   return string{default_value.data(), default_value.size()};
 }
@@ -1481,8 +1481,6 @@ struct fmt::formatter<nameof::cstring<N>> : fmt::formatter<fmt::string_view> {
 
 #if defined(__clang__)
 #  pragma clang diagnostic pop
-#elif defined(__GNUC__)
-#  pragma GCC diagnostic pop
 #elif defined(_MSC_VER)
 #  pragma warning(pop)
 #endif
