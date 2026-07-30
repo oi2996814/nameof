@@ -17,11 +17,77 @@ jobs:
       run: |
         cmake -S . -B build-install \
           -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}/install" \
+          -DCMAKE_INSTALL_PREFIX=/usr \
           -DNAMEOF_OPT_BUILD_EXAMPLES=OFF \
           -DNAMEOF_OPT_BUILD_TESTS=OFF \
           -DNAMEOF_OPT_INSTALL=ON
-        cmake --install build-install --config Release
+        cmake --install build-install \
+          --config Release \
+          --prefix "${{ github.workspace }}/install"
+
+    - name: Test installed files and pkg-config package
+      run: |
+        test -f "${{ github.workspace }}/install/share/nameof/LICENSE"
+        export PKG_CONFIG_PATH="${{ github.workspace }}/install/lib/pkgconfig"
+        pkg-config --exists nameof
+        include_dir="$(pkg-config --variable=includedir nameof)"
+        test "$(realpath "${include_dir}")" = "${{ github.workspace }}/install/include"
+        test -z "$(pkg-config --libs nameof)"
+        c++ -std=c++17 $(pkg-config --cflags nameof) \
+          test/cmake-consumer/main.cpp \
+          -o pkg-config-consumer
+        ./pkg-config-consumer
+
+    - name: Test GenPkgConfig module
+      run: |
+        cmake -S test/cmake-consumer -B build-genpkg-interface \
+          -G Ninja \
+          -DNAMEOF_SOURCE_DIR="${{ github.workspace }}" \
+          -DGEN_PKG_CONFIG_TEST_CASE=interface \
+          -DCMAKE_INSTALL_PREFIX=/usr
+        cmake --install build-genpkg-interface \
+          --component pkgconfig \
+          --prefix "${{ github.workspace }}/genpkg-interface"
+
+        pc_file="$(find "${{ github.workspace }}/genpkg-interface" \
+          -path '*/pkgconfig/interface-probe.pc' -print -quit)"
+        test -n "${pc_file}"
+        grep -Fqx 'Name: interface-probe' "${pc_file}"
+        grep -Fqx 'Description: GenPkgConfig interface probe' "${pc_file}"
+        grep -Fqx 'Version: 1.2.3' "${pc_file}"
+        grep -Fqx 'Requires: public-dependency >= 1.0' "${pc_file}"
+        grep -Fqx 'Conflicts: old-dependency < 1.0' "${pc_file}"
+        grep -Fqx 'Cflags: -I${includedir}' "${pc_file}"
+
+        for library_type in object static; do
+          build_dir="build-genpkg-${library_type}"
+          install_dir="${{ github.workspace }}/genpkg-${library_type}"
+          probe_name="${library_type}-probe"
+
+          cmake -S test/cmake-consumer -B "${build_dir}" \
+            -G "Ninja Multi-Config" \
+            -DNAMEOF_SOURCE_DIR="${{ github.workspace }}" \
+            -DGEN_PKG_CONFIG_TEST_CASE="${library_type}" \
+            -DCMAKE_INSTALL_PREFIX=/usr
+          cmake --build "${build_dir}" --config Release
+          cmake --install "${build_dir}" \
+            --config Release \
+            --prefix "${install_dir}"
+
+          pc_file="$(find "${install_dir}" \
+            -path "*/pkgconfig/${probe_name}.pc" -print -quit)"
+          test -n "${pc_file}"
+          if [ "${library_type}" = object ]; then
+            grep -Fqx \
+              'Description: Object probe keeps @UNDEFINED@ metadata' \
+              "${pc_file}"
+          fi
+          export PKG_CONFIG_PATH="$(dirname "${pc_file}")"
+          c++ -std=c++17 test/cmake-consumer/gen_pkg_config.cpp \
+            $(pkg-config --libs "${probe_name}") \
+            -o "${library_type}-pkg-config-consumer"
+          "./${library_type}-pkg-config-consumer"
+        done
 
     - name: Test installed package
       run: |
@@ -30,3 +96,27 @@ jobs:
           -DCMAKE_PREFIX_PATH="${{ github.workspace }}/install"
         cmake --build build-consumer --parallel
         ctest --test-dir build-consumer --output-on-failure
+
+    - name: Test CPack archive
+      run: |
+        cpack --config build-install/CPackConfig.cmake \
+          -G TGZ \
+          -B package
+        archive="$(find package -maxdepth 1 -name 'nameof-*.tar.gz' -print -quit)"
+        test -n "${archive}"
+        tar -tzf "${archive}" > package-contents.txt
+        grep -Eq '(^|/)include/nameof\.hpp$' package-contents.txt
+        grep -Eq '(^|/)lib/cmake/nameof/nameofConfig\.cmake$' package-contents.txt
+        grep -Eq '(^|/)lib/pkgconfig/nameof\.pc$' package-contents.txt
+        grep -Eq '(^|/)share/nameof/LICENSE$' package-contents.txt
+
+    - name: Test DESTDIR package
+      run: |
+        DESTDIR="${{ github.workspace }}/stage" \
+          cmake --install build-install --config Release
+        test -f "${{ github.workspace }}/stage/usr/include/nameof.hpp"
+        test -f "${{ github.workspace }}/stage/usr/share/nameof/LICENSE"
+        export PKG_CONFIG_PATH="${{ github.workspace }}/stage/usr/lib/pkgconfig"
+        pkg-config --exists nameof
+        include_dir="$(pkg-config --variable=includedir nameof)"
+        test "$(realpath "${include_dir}")" = "${{ github.workspace }}/stage/usr/include"

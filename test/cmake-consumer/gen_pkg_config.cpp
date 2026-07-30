@@ -20,14 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <nameof.hpp>
+#ifdef GEN_PKG_CONFIG_LIBRARY
 
-enum class color { red, green };
+int gen_pkg_config_answer() {
+  return 42;
+}
 
-static_assert(NAMEOF_ENUM_CONST(color::green) == "green");
-static_assert(!NAMEOF_TYPE(color).empty());
+#else
+
+int gen_pkg_config_answer();
 
 int main() {
-  const auto value = color::red;
-  return NAMEOF_ENUM(value) == "red" ? 0 : 1;
+  return gen_pkg_config_answer() == 42 ? 0 : 1;
 }
+
+#endif
