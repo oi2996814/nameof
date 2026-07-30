@@ -14,7 +14,7 @@ If you like this project, please consider donating to one of the funds that help
 ## Documentation
 
 * [Reference](doc/reference.md)
-* [Limitations](doc/limitations.md)
+* [Limitations](doc/limitations.md) - read before use.
 * [Integration](#integration)
 
 ## [Features & Examples](example/example.cpp)
@@ -119,10 +119,6 @@ If you like this project, please consider donating to one of the funds that help
   nameof::nameof_pointer<global_ptr>() -> "someglobalvariable"
   ```
 
-## Remarks
-
-* Before use, read the [limitations](doc/limitations.md).
-
 ## Integration
 
 To use the library directly, add [nameof.hpp](include/nameof.hpp) to your project.
@@ -152,6 +148,12 @@ CPMAddPackage(
 
 ## Compiler compatibility
 
-See the [reference](doc/reference.md) for the compiler requirements of each feature.
+nameof requires C++17 or newer and supports:
+
+* Clang/LLVM >= 5
+* GCC >= 9
+* Visual Studio >= 2017
+
+See the [reference](doc/reference.md#compiler-compatibility) for feature-specific requirements.
 
 ## Licensed under the [MIT License](LICENSE)

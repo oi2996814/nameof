@@ -56,6 +56,16 @@
 
 * RTTI-based APIs follow `typeid` rules: the dynamic type is reported only for polymorphic glvalues.
 
+## Compiler compatibility
+
+nameof requires C++17 or newer and supports:
+
+* Clang/LLVM >= 5
+* GCC >= 9
+* Visual Studio >= 2017
+
+RTTI-based APIs require RTTI to be enabled. `NAMEOF_MEMBER` and `NAMEOF_POINTER` require Visual Studio >= 2022 and C++ >= 20; on Clang >= 5 and GCC >= 9, C++17.
+
 ## `NAMEOF`
 
 * Obtains name of variable, function, macro.
@@ -84,11 +94,6 @@
   NAMEOF(__LINE__) -> "__LINE__"
   ```
 
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17
-  * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 9 and C++ >= 17
-
 ## `NAMEOF_FULL`
 
 * Obtains full (with template suffix) name of variable, function, macro.
@@ -107,11 +112,6 @@
   NAMEOF_FULL(somevar.some_method<int>()) -> "some_method<int>"
   ```
 
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17
-  * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 9 and C++ >= 17
-
 ## `NAMEOF_RAW`
 
 * Obtains raw expression text.
@@ -124,11 +124,6 @@
   NAMEOF_RAW(::somevar.somefield) -> "::somevar.somefield"
   NAMEOF_RAW(&some_class::some_method<int>) -> "&some_class::some_method<int>"
   ```
-
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17
-  * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_ENUM`
 
@@ -148,11 +143,6 @@
   nameof::nameof_enum(color) -> "RED"
   ```
 
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17
-  * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 9 and C++ >= 17
-
 ## `NAMEOF_ENUM_OR`
 
 * Obtains name of enum value or default value if no name is available.
@@ -171,11 +161,6 @@
   nameof::nameof_enum_or((Color)-1, "none") -> "none"
   ```
 
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17
-  * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 9 and C++ >= 17
-
 ## `NAMEOF_ENUM_CONST`
 
 * Obtains name of enum value known at compile time.
@@ -192,11 +177,6 @@
   NAMEOF_ENUM_CONST(Color::GREEN) -> "GREEN"
   nameof::nameof_enum<Color::GREEN>() -> "GREEN"
   ```
-
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17
-  * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_ENUM_FLAG`
 
@@ -226,11 +206,6 @@
   nameof::nameof_enum(static_cast<AnimalFlags>(HasClaws | CanFly)) -> ""
   ```
 
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17
-  * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 9 and C++ >= 17
-
 ## `NAMEOF_TYPE`
 
 * Obtains type name; reference and cv-qualifiers are ignored (`NAMEOF_TYPE(const T&) == NAMEOF_TYPE(T)`).
@@ -249,11 +224,6 @@
   nameof::nameof_type<T>() -> "int"
   ```
 
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17
-  * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 9 and C++ >= 17
-
 ## `NAMEOF_FULL_TYPE`
 
 * Obtains full type name with reference and cv-qualifiers.
@@ -271,11 +241,6 @@
   NAMEOF_FULL_TYPE(T) -> "const int&"
   nameof::nameof_full_type<T>() -> "const int&"
   ```
-
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17
-  * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_SHORT_TYPE`
 
@@ -297,11 +262,6 @@
   nameof::nameof_short_type<T>() -> "SomeClass"
   ```
 
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17
-  * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 9 and C++ >= 17
-
 ## `NAMEOF_TYPE_EXPR`
 
 * Obtains type name of expression; reference and cv-qualifiers are ignored.
@@ -321,11 +281,6 @@
   nameof::nameof_type<decltype(var)>() -> "int"
   ```
 
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17
-  * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 9 and C++ >= 17
-
 ## `NAMEOF_FULL_TYPE_EXPR`
 
 * Obtains full type name of expression with reference and cv-qualifiers.
@@ -344,11 +299,6 @@
   NAMEOF_FULL_TYPE_EXPR(var) -> "const int&"
   nameof::nameof_full_type<decltype(var)>() -> "const int&"
   ```
-
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17
-  * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 9 and C++ >= 17
 
 ## `NAMEOF_SHORT_TYPE_EXPR`
 
@@ -370,14 +320,9 @@
   nameof::nameof_short_type<decltype(var)>() -> "SomeClass"
   ```
 
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17
-  * Visual Studio >= 2017 and C++ >= 17
-  * GCC >= 9 and C++ >= 17
-
 ## `NAMEOF_TYPE_RTTI`
 
-* Obtains type name using RTTI.
+* Obtains type name using RTTI; reference and cv-qualifiers are ignored.
 
 * Returns `string`.
 
@@ -388,14 +333,9 @@
   NAMEOF_TYPE_RTTI(*ptr) -> "my::detail::Derived"
   ```
 
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled
-  * Visual Studio >= 2017 and C++ >= 17 and RTTI enabled
-  * GCC >= 9 and C++ >= 17 and RTTI enabled
-
 ## `NAMEOF_FULL_TYPE_RTTI`
 
-* Obtains full type name using RTTI.
+* Obtains type name using RTTI and preserves reference and cv-qualifiers.
 
 * Returns `string`.
 
@@ -407,14 +347,9 @@
   NAMEOF_FULL_TYPE_RTTI(cv_ref) -> "volatile const my::detail::Derived&"
   ```
 
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled
-  * Visual Studio >= 2017 and C++ >= 17 and RTTI enabled
-  * GCC >= 9 and C++ >= 17 and RTTI enabled
-
 ## `NAMEOF_SHORT_TYPE_RTTI`
 
-* Obtains short type name using RTTI.
+* Obtains short type name using RTTI; namespace qualification, template arguments, references, and cv-qualifiers are omitted.
 
 * Returns `string`.
 
@@ -427,16 +362,11 @@
   NAMEOF_SHORT_TYPE_RTTI(*ptr) -> "Derived"
   ```
 
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17 and RTTI enabled
-  * Visual Studio >= 2017 and C++ >= 17 and RTTI enabled
-  * GCC >= 9 and C++ >= 17 and RTTI enabled
-
 ## `NAMEOF_MEMBER`
 
 * Obtains name of member.
 
-* Returns a reference to `nameof::cstring`, a constexpr null-terminated string type.
+* Returns a reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
 * On Visual Studio, the containing class must be fully defined before use.
 
@@ -451,16 +381,11 @@
   nameof::nameof_member<&A::this_is_the_name>() -> "this_is_the_name"
   ```
 
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17
-  * Visual Studio >= 2022 and C++ >= 20
-  * GCC >= 9 and C++ >= 17
-
 ## `NAMEOF_POINTER`
 
 * Obtains name of a function, a global or class static variable.
 
-* Returns a reference to `nameof::cstring`, a constexpr null-terminated string type.
+* Returns a reference to `nameof::cstring`, a constexpr null-terminated string type. Marked `constexpr` and `noexcept`.
 
 * If pointer is null, returns `"nullptr"` by default.
 
@@ -477,8 +402,3 @@
   NAMEOF_POINTER(global_ptr) -> "someglobalvariable"
   nameof::nameof_pointer<global_ptr>() -> "someglobalvariable"
   ```
-
-* Compiler compatibility
-  * Clang/LLVM >= 5 and C++ >= 17
-  * Visual Studio >= 2022 and C++ >= 20
-  * GCC >= 9 and C++ >= 17
