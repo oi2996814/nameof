@@ -71,3 +71,27 @@ jobs:
 
     - name: Test Debug
       run: ctest --test-dir build-debug --output-on-failure -C Debug
+
+  fmt:
+    name: fmt
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Install fmt
+      run: |
+        sudo apt update
+        sudo apt install -y libfmt-dev
+
+    - name: Configure
+      run: |
+        cmake -S . -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DNAMEOF_TEST_REQUIRE_FMT=ON
+
+    - name: Build
+      run: cmake --build build --parallel --target test-cpp17
+
+    - name: Test
+      run: ctest --test-dir build --output-on-failure -R "^test-cpp17$"

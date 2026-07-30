@@ -37,9 +37,24 @@
 #  endif
 #endif
 
+#if defined(NAMEOF_TEST_REQUIRE_FMT) && !defined(NAMEOF_TEST_HAS_FMT_FORMAT)
+#  error "NAMEOF_TEST_REQUIRE_FMT requires <fmt/format.h>."
+#endif
+
+#if !defined(_MSC_VER)
+#  include <complex.h>
+#  if !defined(I)
+#    define I (0)
+#  endif
+#endif
+
 #define NAMEOF_ENUM_RANGE_MIN -120
 #define NAMEOF_ENUM_RANGE_MAX 120
 #include <nameof.hpp>
+
+#if !defined(_MSC_VER) && defined(I)
+#  undef I
+#endif
 
 #if defined(__cpp_lib_format) && __cpp_lib_format >= 201907L
 #  define NAMEOF_TEST_HAS_STD_FORMAT 1
