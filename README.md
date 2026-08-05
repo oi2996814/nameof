@@ -11,7 +11,7 @@ A header-only C++17 library that provides nameof macros and functions for obtain
 ## Documentation
 
 * [Reference](doc/reference.md)
-* [Limitations](doc/limitations.md) - read before use.
+* [Limitations](doc/limitations.md)
 * [Custom names](example/example_custom_name.cpp)
 * [Integration](#integration)
 
@@ -63,12 +63,12 @@ A header-only C++17 library that provides nameof macros and functions for obtain
   // Enum flag value to string.
   auto flag = static_cast<AnimalFlags>(CanFly | EatsFish);
   NAMEOF_ENUM_FLAG(flag) -> "CanFly|EatsFish"
-  nameof::nameof_enum_flag(flag) -> "CanFly|EatsFish"
+  nameof::nameof_enum_flag(flag, '$') -> "CanFly$EatsFish"
 
   // Obtains name of enum value or default value if no name is available.
   NAMEOF_ENUM_OR(Color::GREEN, "none") -> "GREEN"
   NAMEOF_ENUM_OR((Color)0, "none") -> "none"
-  nameof::nameof_enum_or((Color)0, "none") -> "none"
+  nameof::nameof_enum_or(Color::GREEN, "none") -> "GREEN"
   ```
 
 * **Nameof type**
