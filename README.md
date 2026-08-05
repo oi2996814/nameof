@@ -3,13 +3,10 @@
 [![vcpkg package](https://img.shields.io/badge/vcpkg-package-blueviolet)](https://github.com/microsoft/vcpkg/tree/master/ports/nameof)
 [![License](https://img.shields.io/github/license/Neargye/nameof.svg)](LICENSE)
 [![Compiler explorer](https://img.shields.io/badge/compiler_explorer-online-blue.svg)](https://godbolt.org/z/s_ecko)
-[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://stand-with-ukraine.pp.ua)
 
 # Nameof C++
 
 A header-only C++17 library that provides nameof macros and functions for obtaining the name of a variable, type, function, macro, or enum.
-
-If you like this project, please consider donating to one of the funds that help victims of the war in Ukraine: https://u24.gov.ua.
 
 ## Documentation
 
