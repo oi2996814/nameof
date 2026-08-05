@@ -12,6 +12,7 @@ A header-only C++17 library that provides nameof macros and functions for obtain
 
 * [Reference](doc/reference.md)
 * [Limitations](doc/limitations.md) - read before use.
+* [Custom names](example/example_custom_name.cpp)
 * [Integration](#integration)
 
 ## [Features & Examples](example/example.cpp)
@@ -67,6 +68,7 @@ A header-only C++17 library that provides nameof macros and functions for obtain
   // Obtains name of enum value or default value if no name is available.
   NAMEOF_ENUM_OR(Color::GREEN, "none") -> "GREEN"
   NAMEOF_ENUM_OR((Color)0, "none") -> "none"
+  nameof::nameof_enum_or((Color)0, "none") -> "none"
   ```
 
 * **Nameof type**
@@ -118,30 +120,30 @@ A header-only C++17 library that provides nameof macros and functions for obtain
 
 ## Integration
 
-To use the library directly, add [nameof.hpp](include/nameof.hpp) to your project.
+* **Single header:** add [nameof.hpp](include/nameof.hpp) to your project.
 
-With an installed CMake package:
+* **CMake package:**
 
-```cmake
-find_package(nameof CONFIG REQUIRED)
-target_link_libraries(your_target PRIVATE nameof::nameof)
-```
+  ```cmake
+  find_package(nameof CONFIG REQUIRED)
+  target_link_libraries(your_target PRIVATE nameof::nameof)
+  ```
 
-If you use [vcpkg](https://github.com/Microsoft/vcpkg/), install the [nameof package](https://github.com/microsoft/vcpkg/tree/master/ports/nameof).
+* **vcpkg:** install the [nameof package](https://github.com/microsoft/vcpkg/tree/master/ports/nameof) with `vcpkg install nameof`.
 
-If you use [Conan](https://www.conan.io/) to manage your dependencies, add `nameof/x.y.z` to the `requires` section, where `x.y.z` is the release version you want to use.
+* **[Conan](https://www.conan.io/):** add `nameof/x.y.z` to the `requires` section, where `x.y.z` is the required release version.
 
-Arch Linux users can install `nameof` from the AUR with an AUR helper such as `yay`: `yay -S nameof`.
+* **AUR:** install `nameof` with an AUR helper, for example `yay -S nameof`.
 
-Alternatively, use [CPM](https://github.com/cpm-cmake/CPM.cmake), which is based on CMake's `FetchContent` module.
+* **[CPM](https://github.com/cpm-cmake/CPM.cmake):**
 
-```cmake
-CPMAddPackage(
-    NAME nameof
-    GITHUB_REPOSITORY Neargye/nameof
-    GIT_TAG vx.y.z # Replace `x.y.z` with the release version you want to use.
-)
-```
+  ```cmake
+  CPMAddPackage(
+      NAME nameof
+      GITHUB_REPOSITORY Neargye/nameof
+      GIT_TAG vx.y.z # Replace `x.y.z` with the release version you want to use.
+  )
+  ```
 
 ## Compiler compatibility
 
